@@ -1,0 +1,46 @@
+<html>
+
+<head>
+    <title>Shlifim Question Example</title>
+    <style type="text/css">
+        .author,
+        .eom {
+            color: grey
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Question from Calculus course</h1>
+    <h4>Posted by Ran at March 9, 2021, 2:12 p.m.</h4>
+    <p>
+        Hey Guys, I am spending hours by understanding this question :<br>
+        "1 + 1 = ?" <br>
+        Can you please give me a hint/solution? <br>
+    </p>
+
+    <hr>
+    <h2>Comments :</h2>
+    {% for message in messages %}
+    <div class="message">
+        <p class="author">
+            Posted by {{message.author}} at {{message.date}}
+        </p>
+        <p>{{ message.text }}</p>
+    </div>
+    {% endfor %}
+    <p class="EOM">(End of messages)</p>
+
+    <hr>
+
+    <div class="newfrm">
+        <p class="newmsg">
+        <h2>New message:</h2>
+        </p>
+        <form method="POST">
+            {% csrf_token %}
+            {{ form.as_p }}
+            <input type="submit" value="Post">
+        </form>
+    </div>
+</body>
