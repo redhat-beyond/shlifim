@@ -1,15 +1,15 @@
 # Shlifim Project - beyond 05 team 3
 
 
-![shlifim_logo_2](https://user-images.githubusercontent.com/40122521/110316976-2990f880-8014-11eb-8ee8-96c21dd4b29f.png)
+![logo](https://user-images.githubusercontent.com/40122521/113417988-3fa09780-93cd-11eb-8e69-2a166145a5d6.png)
+
 
 **Description**: Shlifim is the project our group will work on during the course.
 The project will be forum based web application for helping students find answers
 to their homework and assignments and also share summaries.
 
-[![Maintenance](https://img.shields.io/badge/Version%3F-Demo-yellow.svg)](https://github.com/beyond-io/shlifim/issues)
-[![Python Status](https://github.com/beyond-io/shlifim/actions/workflows/flake8.yml/badge.svg)](https://github.com/beyond-io/shlifim/actions/workflows/flake8.yml)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/beyond-io/shlifim/graphs/commit-activity)
+[![GitHub pull-requests](https://img.shields.io/github/issues-pr/beyond-io/shlifim.svg)](https://GitHub.com/beyond-io/shlifim/pull/)
+[![GitHub issues](https://img.shields.io/github/issues/beyond-io/shlifim.svg)](https://GitHub.com/beyond-io/shlifim/issues/)
 
 ## Upcoming Features:
 * Register & Login 
@@ -19,7 +19,6 @@ to their homework and assignments and also share summaries.
 * Up/Down vote an answer
 * Add tags to questions
 * Filter questions by topics / tags / most answered
-* Upload a file
 
 ## Technology stack 
 * [Vagrant](https://www.vagrantup.com/) -  an open-source software product for building and maintaining portable virtual software development environments
