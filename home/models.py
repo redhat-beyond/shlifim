@@ -30,3 +30,31 @@ class Profile(models.Model):
 
     def __str__(self):
         return '{self.user.username}'.format(self=self)
+
+
+class Subject(models.Model):
+    subject_name = models.CharField(max_length=100, unique=True)
+
+    def __str__(self):
+        return self.subject_name
+
+
+class Sub_Subject(models.Model):
+    sub_subject_name = models.CharField(max_length=100)
+    related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.sub_subject_name
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['sub_subject_name', 'related_subject'], name='unique_sub_subject')
+        ]
+
+
+class Book(models.Model):
+    book_name = models.CharField(max_length=100, unique=True)
+    related_subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return self.book_name
