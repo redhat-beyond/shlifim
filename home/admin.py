@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Subject, Sub_Subject, Book, Question
+from .models import Profile, Subject, Sub_Subject, Book, Question, Answer
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -17,8 +17,14 @@ class QuestionAdmin(admin.ModelAdmin):
     list_display = ("title", "subject", "profile", "publish_date")
 
 
+class AnswerAdmin(admin.ModelAdmin):
+    model = Answer
+    list_display = ("profile", "question", "content")
+
+
 admin.site.register(Profile)
 admin.site.register(Subject)
 admin.site.register(Sub_Subject, SubSubjectAdmin)
 admin.site.register(Book, BookAdmin)
 admin.site.register(Question, QuestionAdmin)
+admin.site.register(Answer, AnswerAdmin)

@@ -87,3 +87,17 @@ class Question(models.Model):
 
     def __str__(self):
         return f"Question #{self.id} : {self.title} ( {self.publish_date.strftime('%d/%m/%Y %H:%M')} )"
+
+
+class Answer(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    content = models.TextField()
+    publish_date = models.DateTimeField(default=timezone.now)
+    likes_count = models.IntegerField(default=0)
+    dislikes_count = models.IntegerField(default=0)
+    is_edited = models.BooleanField(default=False)
+    ordering = ['likes_count']
+
+    def __str__(self):
+        return self.content
