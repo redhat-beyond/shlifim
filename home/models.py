@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from django.utils import timezone
 
 
 class Gender(models.TextChoices):
@@ -58,3 +59,31 @@ class Book(models.Model):
 
     def __str__(self):
         return self.book_name
+
+
+class Grade(models.TextChoices):
+    GRADE7 = '7', 'Seventh Grade'
+    GRADE8 = '8', 'Eighth grade'
+    GRADE9 = '9', 'Ninth grade'
+    GRADE10 = '10', 'Tenth grade'
+    GRADE11 = '11', 'Eleventh grade'
+    GRADE12 = '12', 'Twelfth grade'
+
+
+class Question(models.Model):
+    profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
+    title = models.CharField(max_length=50)
+    content = models.TextField()
+    publish_date = models.DateTimeField(default=timezone.now)
+    subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
+    sub_subject = models.ForeignKey(Sub_Subject, on_delete=models.CASCADE, blank=True)  # field not required
+    grade = models.CharField(max_length=2, choices=Grade.choices)
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True)  # field not required
+    book_page = models.IntegerField(null=True, blank=True)  # field not required
+    is_edited = models.BooleanField(default=False)
+
+    class Meta:
+        ordering = ['-publish_date']  # ordered by publish_date
+
+    def __str__(self):
+        return f"Question #{self.id} : {self.title} ( {self.publish_date.strftime('%d/%m/%Y %H:%M')} )"
