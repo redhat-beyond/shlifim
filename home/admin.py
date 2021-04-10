@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Profile, Subject, Sub_Subject, Book, Question, Answer
+from .models import Profile, Subject, Sub_Subject, Book, Question, Answer, Tag, Question_Tag
 
 
 class BookAdmin(admin.ModelAdmin):
@@ -28,3 +28,5 @@ admin.site.register(Sub_Subject, SubSubjectAdmin)
 admin.site.register(Book, BookAdmin)
 admin.site.register(Question, QuestionAdmin)
 admin.site.register(Answer, AnswerAdmin)
+admin.site.register(Tag)
+admin.site.register(Question_Tag)
