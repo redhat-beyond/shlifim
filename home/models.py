@@ -101,3 +101,24 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.content
+
+
+class Tag(models.Model):
+    tag_name = models.CharField(max_length=50)
+
+    def __str__(self):
+        return self.tag_name
+
+
+class Question_Tag(models.Model):
+    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question_ID')
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='tag_ID')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(
+                fields=['question', 'tag'], name='question_tag')
+        ]
+
+    def __str__(self):
+        return f"{self.question}, Tag : {self.tag}"
