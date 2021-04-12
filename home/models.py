@@ -76,9 +76,9 @@ class Question(models.Model):
     content = models.TextField()
     publish_date = models.DateTimeField(default=timezone.now)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    sub_subject = models.ForeignKey(Sub_Subject, on_delete=models.CASCADE, blank=True)  # field not required
+    sub_subject = models.ForeignKey(Sub_Subject, on_delete=models.CASCADE, blank=True, null=True)  # field not required
     grade = models.CharField(max_length=2, choices=Grade.choices)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, blank=True)  # field not required
+    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, blank=True)  # field not required
     book_page = models.IntegerField(null=True, blank=True)  # field not required
     is_edited = models.BooleanField(default=False)
 
