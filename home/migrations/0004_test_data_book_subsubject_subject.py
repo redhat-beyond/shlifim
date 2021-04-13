@@ -43,13 +43,13 @@ class Migration(migrations.Migration):
             ('Text analysis', 'Hebrew'),
             ('Grammer', 'Hebrew'),
             ('Algebra', 'Math'),
-            ('Geometry ', 'Math'),
+            ('Geometry', 'Math'),
             ('Probability', 'Math'),
             ('Classical mechanics', 'Physics'),
-            ('Thermodynamics ', 'Physics'),
+            ('Thermodynamics', 'Physics'),
             ('Quantum mechanics', 'Physics'),
             ('Ancient history‎', 'History'),
-            ('Roman period ', 'History'),
+            ('Roman period', 'History'),
             ('The Middle Ages', 'History'),
         ]
         book_test_data = [
