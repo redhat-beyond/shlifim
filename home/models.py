@@ -84,7 +84,7 @@ class Question(models.Model):
     tags = models.ManyToManyField('Tag', through='Question_Tag')
 
     class Meta:
-        ordering = ['-publish_date']  # ordered by publish_date
+        ordering = ['-publish_date']  # default ordered by publish_date
 
     def __str__(self):
         return f"Question #{self.id} : {self.title} ( {self.publish_date.strftime('%d/%m/%Y %H:%M')} )"
@@ -104,6 +104,21 @@ class Question(models.Model):
                 new_pair.tag = tag
                 new_pair.save()
 
+    def get_answers_feed(self, filterType=''):
+        '''
+        Get all the answers in the DB for that question
+        Also get filter type param for chosing between date / likes count filter
+        '''
+        answers = self.answer_set
+        if filterType == 'date' or filterType == '':
+            answers = answers.order_by('-publish_date')
+        elif filterType == 'votes':
+            answers = answers.order_by('-likes_count')
+        return answers
+
+    def get_question_title(self):
+        return str(self.subject) + '-' + self.title
+
 
 class Answer(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -117,6 +132,15 @@ class Answer(models.Model):
 
     def __str__(self):
         return self.content
+
+    def thumb_up_answer(self):
+        self.likes_count = self.likes_count + 1
+
+    def thumb_down_answer(self):
+        self.dislikes_count = self.dislikes_count + 1
+
+    def set_is_edited(self, newVal):
+        self.is_edited = newVal
 
 
 class Tag(models.Model):
