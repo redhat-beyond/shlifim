@@ -39,6 +39,61 @@
             </div>
 	{% endfor %}
 
+<div class="row m-4">
+        <div class="col">
+     {% if is_paginated %}
+         <div class="btn-group" name="page" role="group" aria-label="Basic radio toggle button group">
+
+              {% if page_obj.has_previous %}
+                <input type="radio" class="btn-check" name="page" id="First" autocomplete="off" value=1  onclick="this.form.submit()" >
+                <label class="btn btn-outline-secondary mb-4" for="First">First</label>
+
+                <input type="radio" class="btn-check" name="page" id="Previous" autocomplete="off" value={{ page_obj.previous_page_number }}  onclick="this.form.submit()" >
+                <label class="btn btn-outline-secondary mb-4" for="Previous">Previous</label>
+              {% endif %}
+
+              {% for num in page_obj.paginator.page_range %}
+                {% if page_obj.number == num %}
+                 <input type="radio" class="btn-check" name="page" id="a{{num}}" autocomplete="off" value={{num}}  onclick="this.form.submit()" >
+                <label class="btn btn-secondary mb-4" for="a{{num}}">{{num}}</label>
+                {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+              <input type="radio" class="btn-check" name="page" id=b{{num}} autocomplete="off" value={{num}} onclick="this.form.submit()" >
+                <label class="btn btn-outline-secondary mb-4" for=b{{num}}>{{num}}</label>
+                {% endif %}
+              {% endfor %}
+
+              {% if page_obj.has_next %}
+                <input type="radio" class="btn-check" name="page" id="next" autocomplete="off" value={{page_obj.next_page_number}}  onclick="this.form.submit()" >
+                <label class="btn btn-outline-secondary mb-4" for="next">Next</label>
+
+                <input type="radio" class="btn-check" name="page" id="Last" autocomplete="off" value={{page_obj.paginator.num_pages }}  onclick="this.form.submit()" >
+                <label class="btn btn-outline-secondary mb-4" for="Last">Last</label>
+              {% endif %}
+        </div>
+
+    </div>
+            {% endif %}
+
+        <div class="col-5 pull-right">
+            <div  class="btn-group" name="paginate_by" role="group" aria-label="Basic radio toggle button group" >
+              <input type="radio" class="btn-check" name="paginate_by" id="btnradio5" autocomplete="off" value="5" onclick="this.form.submit()">
+              <label class="btn btn-outline-secondary" for="btnradio5">5</label>
+
+              <input type="radio" class="btn-check" name="paginate_by" id="btnradio10" value="10" autocomplete="off" onclick="this.form.submit()">
+              <label class="btn btn-outline-secondary" for="btnradio10">10</label>
+
+              <input type="radio" class="btn-check" name="paginate_by" id="btnradio15" value="15" autocomplete="off" onclick="this.form.submit()">
+              <label class="btn btn-outline-secondary" for="btnradio15">15</label>
+
+              <input type="radio" class="btn-check" name="paginate_by" id="btnradio20" autocomplete="off" value="20"  onclick="this.form.submit()" >
+              <label class="btn btn-outline-secondary" for="btnradio20">20</label>
+
+            </div>
+
+             <span class="m-2">items Per page</span>
+        </div>
+
+
     </div>
 </div>
 </form>

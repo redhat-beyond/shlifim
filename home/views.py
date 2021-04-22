@@ -50,3 +50,7 @@ class QuestionsListView(ListView):
     template_name = 'home/explore.html'
     context_object_name = 'questions'
     ordering = ['-publish_date']
+    paginate_by = 10
+
+    def get_paginate_by(self, queryset):
+        return self.request.GET.get("paginate_by", self.paginate_by)
