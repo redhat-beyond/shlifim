@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.db import models
 from django.utils import timezone
+from django.contrib.auth.models import User
 
 
 class Gender(models.TextChoices):
@@ -31,6 +32,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return '{self.user.username}'.format(self=self)
+
+    @classmethod
+    def create(cls, username, password, email, gender='U', is_blocked=False):
+        user = User.objects.create_user(username=username, password=password, email=email)
+        profile = cls(user=user, gender=gender, is_blocked=is_blocked)
+        profile.save()
+        return profile
 
 
 class Subject(models.Model):
@@ -142,6 +150,12 @@ class Answer(models.Model):
     def set_is_edited(self, newVal):
         self.is_edited = newVal
 
+# =======
+#     @classmethod
+#     def get_answers_by_date(cls):
+#         return cls.objects.order_by('-publish_date')
+# >>>>>>> e490b6c (Add create method to profile model)
+#
 
 class Tag(models.Model):
     tag_name = models.CharField(max_length=20)
@@ -150,7 +164,7 @@ class Tag(models.Model):
     def __str__(self):
         return self.tag_name
 
-    # The function returnss all tags ordered by name tag.
+    # The function returns all tags ordered by name tag.
     @classmethod
     def tags_feed(cls, search=''):
         return cls.objects.filter(tag_name__contains=search).order_by('tag_name')
@@ -164,7 +178,7 @@ class Question_Tag(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=['question', 'tag'], name='question_tag')
-        ]
+                      ]
 
     def __str__(self):
         return f"{self.question}, Tag : {self.tag}"
