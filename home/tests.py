@@ -1,11 +1,10 @@
-from home.models import Profile, Subject, Question, Tag, Question_Tag
+from home.models import Profile, Subject, Question, Tag, Answer, Question_Tag
 from django.contrib.auth.models import User
 from django.utils import timezone
+from datetime import datetime
+from django.db.models.query import QuerySet
+from django.urls import reverse
 import pytest
-
-
-def test_first():
-    assert True
 
 
 @pytest.mark.django_db
@@ -96,3 +95,101 @@ def question_tag_test_data(question_test_data):
     new_pair.tag = test_tag
     new_pair.save()
     return test_tag
+
+
+class TestDisplayQuestionFeature:
+    class TestAnswersManipulations:
+        @pytest.fixture
+        def answers(self):
+            profile = Profile.objects.first()
+            question = Question.objects.get(id=3)
+            ans1 = Answer(profile=profile, question=question, content='Answer 1', publish_date=datetime(2021, 4, 1,),
+                          likes_count=1, dislikes_count=0, is_edited=False)
+            ans2 = Answer(profile=profile, question=question, content='Answer 2', publish_date=datetime(2021, 4, 2,),
+                          likes_count=0, dislikes_count=0, is_edited=False)
+            ans1.save()
+            ans2.save()
+            return [ans1, ans2]
+
+        @pytest.mark.django_db
+        def test_thumb_up_answer(self, answers):
+            """
+            thumb_up_answer(answer_id) increase the thumbs up field of an answer by one
+            """
+            prev_thumb_val = answers[0].likes_count
+            answers[0].thumb_up_answer()
+            assert(prev_thumb_val == answers[0].likes_count - 1)
+
+        @pytest.mark.django_db
+        def test_thumb_down_answer(self, answers):
+            """
+            thumb_down_answer(answer_id) increase the thumbs down field of an answer by one
+            """
+            prev_thumb_val = answers[0].dislikes_count
+            answers[0].thumb_down_answer()
+            assert(prev_thumb_val == answers[0].dislikes_count - 1)
+
+        @pytest.mark.django_db
+        def test_set_is_edited(self, answers):
+            """
+            Tests functionality of set_is_edited
+            """
+            prev_is_edited_val = answers[0].is_edited
+            answers[0].set_is_edited(not prev_is_edited_val)
+            assert(prev_is_edited_val != answers[0].is_edited)
+
+        @pytest.mark.django_db
+        @pytest.mark.parametrize('filterType, expected', [('date', 'Answer 2'), ('votes', 'Answer 1')])
+        def test_answers_feed(self, filterType, expected, answers):
+            """
+            Tests if get_answers_feed returns queryset of all the answers of
+            question number 3 sorted by votes or answers
+            """
+            question = Question.objects.get(id=3)
+            answers_feed = question.get_answers_feed(filterType)
+            assert isinstance(answers_feed, QuerySet)
+            assert answers_feed[0].content == expected
+
+    class TestQuestionRelatedMethods:
+        @pytest.mark.django_db
+        def test_get_question_title(self):
+            """
+            get_question_title(question_id) returns a string for question
+            should return question subject and question title
+            """
+            question = Question.objects.get(id=1)
+            assert(question.get_question_title() == "Math-question from math course")
+
+    class TestHTMLRelated:
+        @pytest.mark.django_db
+        @pytest.fixture
+        def response(self, client):
+            url = reverse('question-detail', args=[2])
+            response = client.get(url)
+            return response
+
+        @pytest.mark.django_db
+        def test_display_question_page_url(self, response):
+            """
+            This test checks the returned status for routing to display-question feature
+            """
+            assert response.status_code == 200
+
+        @pytest.mark.django_db
+        def test_template_name(self, response):
+            assert response.templates[0].name == "home/question_detail.html"
+
+        @pytest.mark.django_db
+        def test_response_context(self, response):
+            '''
+            Testing if the context passed to the view contains the right contents
+            '''
+            expectedPairs = [
+                ('question', 'Question #2 : question from bible course'),
+                ('answers', '<QuerySet [<Answer: IDK>]>'),
+                ('answersCount', '1'),
+                ('tags', ''),
+                ('title', 'Bible-question from bible course')
+                ]
+            for check, excepted in expectedPairs:
+                assert str(response.context[check]).startswith(excepted)
