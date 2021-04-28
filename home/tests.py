@@ -1,4 +1,4 @@
-from home.models import Profile, Subject, Question, Tag, Answer, Question_Tag
+from home.models import Profile, Subject, Question, Tag, Question_Tag, Answer
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime
@@ -205,3 +205,35 @@ class TestTagsPage:
         url = reverse('tags')
         response = client.get(url)
         return response
+
+
+@pytest.fixture
+def profile():
+    profile = Profile.create(username="test_user", password="testtest", email="test@test.com")
+    return profile
+
+
+@pytest.mark.django_db
+def test_default_params_profile(profile):
+    assert profile.user.id >= 0  # check if user saved successfully and get an id
+    assert profile.gender == 'U'  # default gender is U
+    assert profile.is_blocked is False
+
+
+@pytest.mark.django_db
+def test_default_params_answer(profile):
+    question = Question.objects.first()
+    answer = Answer(profile=profile, question=question, content='Test')
+    assert answer.likes_count == 0
+    assert answer.dislikes_count == 0
+    assert answer.is_edited is False
+
+
+@pytest.mark.django_db
+def test_get_answers():
+    out = Answer.get_answers_by_date()
+    assert all(isinstance(a, Answer) for a in out)
+    assert set([
+        (2, 2, 'IDK'),
+        (1, 1, 'pretty sure its 2 but I suggesting you to check with another resources '),
+        ]).issubset(list(out.values_list('profile', 'question', 'content')))

@@ -150,12 +150,10 @@ class Answer(models.Model):
     def set_is_edited(self, newVal):
         self.is_edited = newVal
 
-# =======
-#     @classmethod
-#     def get_answers_by_date(cls):
-#         return cls.objects.order_by('-publish_date')
-# >>>>>>> e490b6c (Add create method to profile model)
-#
+    @classmethod
+    def get_answers_by_date(cls):
+        return cls.objects.order_by('-publish_date')
+
 
 class Tag(models.Model):
     tag_name = models.CharField(max_length=20)
