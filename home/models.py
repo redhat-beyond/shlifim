@@ -81,12 +81,28 @@ class Question(models.Model):
     book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, blank=True)  # field not required
     book_page = models.IntegerField(null=True, blank=True)  # field not required
     is_edited = models.BooleanField(default=False)
+    tags = models.ManyToManyField('Tag', through='Question_Tag')
 
     class Meta:
         ordering = ['-publish_date']  # ordered by publish_date
 
     def __str__(self):
         return f"Question #{self.id} : {self.title} ( {self.publish_date.strftime('%d/%m/%Y %H:%M')} )"
+
+    # Input: a set of strings represting tag names.
+    def add_tags_to_question(self, tags):
+        for tag_name in tags:
+            # if tag exist in DB - fetch the tag. else, create a new tag.
+            tag, created = Tag.objects.get_or_create(tag_name=tag_name)
+            if created:
+                tag.tag_name = tag_name
+                tag.save()
+            # add a new Question_Tag only if tag not in self.tags.
+            if tag not in self.tags.all():
+                new_pair = Question_Tag()
+                new_pair.question = self
+                new_pair.tag = tag
+                new_pair.save()
 
 
 class Answer(models.Model):
@@ -104,10 +120,16 @@ class Answer(models.Model):
 
 
 class Tag(models.Model):
-    tag_name = models.CharField(max_length=50)
+    tag_name = models.CharField(max_length=20)
+    questions = models.ManyToManyField('Question', through='Question_Tag')
 
     def __str__(self):
         return self.tag_name
+
+    # The function returnss all tags ordered by name tag.
+    @classmethod
+    def tags_feed(cls, search=''):
+        return cls.objects.filter(tag_name__contains=search).order_by('tag_name')
 
 
 class Question_Tag(models.Model):
