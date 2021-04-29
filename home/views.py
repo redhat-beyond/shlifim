@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from .models import Question
+from .models import Question, Tag
 
 
 def about(request):
@@ -21,3 +21,12 @@ def displayQuestion(request, **kwargs):
         "title": question.get_question_title()
     }
     return render(request, 'home/question_detail.html', context)
+
+
+def tags(request):
+    if 'q' in request.GET:
+        search = request.GET['q']
+        tags = Tag.tags_feed(search)
+    else:
+        tags = Tag.tags_feed()
+    return render(request, 'home/tags.html', {'tags': tags})

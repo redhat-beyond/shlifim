@@ -1,0 +1,34 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/CSS/tags_style.css' %}">
+<html>
+    <body>
+        <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-12">
+            <br><br>
+            <center><h1>Tags</h1></center>
+            <br><br>
+            <div class="tags-grid">
+                <form class="d-flex">
+                    <input name="q" class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-light" type="submit" ng-click="ctrl.clearSearch()">Search</button>
+                </form>
+                <br><br>
+                <div class="wrapper">
+                    {% for tag in tags %}
+                    <div class="card border-secondary mb-3">
+                        <div class="card-body">
+                            <p class="card-text">{{tag.tag_name}}</p>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            </div>
+        </div>
+    </body>
+   
+</html>
+{% endblock content %}
