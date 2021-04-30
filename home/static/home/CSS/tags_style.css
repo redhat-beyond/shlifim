@@ -1,0 +1,28 @@
+body {
+    margin: auto;
+    background-color: #D9B6A3;
+}
+
+form.d-flex input {
+    border: 1px solid black;
+}
+        
+form.d-flex button {
+    background-color: #A9D4D9;
+    border: 1px solid black;
+}
+
+.wrapper {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.item-in-wrapper {
+    cursor: pointer;
+    position: relative;
+    height: 200px;
+    width: 180px;
+    text-align: center;
+}
