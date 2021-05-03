@@ -423,3 +423,9 @@ class TestProfileMiddleware():
         request_mock = Mock(user=self.LoggedOutUserMock())
         pm.process_view(request_mock, None, None, None)
         assert request_mock.profile is None
+
+
+@pytest.mark.django_db
+def test_login(client):
+    response = client.get('/login')
+    assert response.status_code == 301
