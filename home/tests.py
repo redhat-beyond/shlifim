@@ -6,6 +6,7 @@ from django.db.models.query import QuerySet
 from django.urls import reverse
 from pytest_django.asserts import assertTemplateUsed
 import pytest
+import pytz
 
 
 class TestManyToManyFeature:
@@ -94,9 +95,11 @@ class TestDisplayQuestionFeature:
         def answers(self):
             profile = Profile.objects.first()
             question = Question.objects.get(id=3)
-            ans1 = Answer(profile=profile, question=question, content='Answer 1', publish_date=datetime(2021, 4, 1,),
+            ans1 = Answer(profile=profile, question=question, content='Answer 1',
+                          publish_date=datetime(2021, 4, 1, tzinfo=pytz.UTC),
                           likes_count=1, dislikes_count=0, is_edited=False)
-            ans2 = Answer(profile=profile, question=question, content='Answer 2', publish_date=datetime(2021, 4, 2,),
+            ans2 = Answer(profile=profile, question=question, content='Answer 2',
+                          publish_date=datetime(2021, 4, 2, tzinfo=pytz.UTC),
                           likes_count=0, dislikes_count=0, is_edited=False)
             ans1.save()
             ans2.save()

@@ -1,5 +1,6 @@
 from django.db import migrations, transaction
 from datetime import datetime
+import pytz
 
 
 class Migration(migrations.Migration):
@@ -11,21 +12,21 @@ class Migration(migrations.Migration):
         from home.models import Profile, Question, Answer
 
         answer_test_data = [(2, 1, 'This is an old Answer',
-                            datetime(2019, 5, 3), 1, 2, False),
+                            datetime(2019, 5, 3, tzinfo=pytz.UTC), 1, 2, False),
                             (1, 1, 'This is an popular Answer',
-                            datetime(2021, 1, 3), 100, 3, False),
+                            datetime(2021, 1, 3, tzinfo=pytz.UTC), 100, 3, False),
                             (3, 1, 'The answer is 2 for sure. I have master degree in Math from Harvard',
-                            datetime(2021, 2, 14), 5, 1, False),
+                            datetime(2021, 2, 14, tzinfo=pytz.UTC), 5, 1, False),
                             (4, 1, '1+1 = 2. Simple algebra.',
-                            datetime(2021, 4, 14), 5, 1, False),
+                            datetime(2021, 4, 14, tzinfo=pytz.UTC), 5, 1, False),
                             (2, 14, 'Old Answer',
-                            datetime(2019, 5, 3), 1, 2, False),
+                            datetime(2019, 5, 3, tzinfo=pytz.UTC), 1, 2, False),
                             (1, 14, 'Popular Answer',
-                            datetime(2021, 1, 3), 100, 3, False),
+                            datetime(2021, 1, 3, tzinfo=pytz.UTC), 100, 3, False),
                             (3, 14, 'Answer A',
-                            datetime(2021, 2, 14), 5, 1, False),
+                            datetime(2021, 2, 14, tzinfo=pytz.UTC), 5, 1, False),
                             (4, 14, 'Answer B',
-                            datetime(2021, 4, 14), 5, 1, False),
+                            datetime(2021, 4, 14, tzinfo=pytz.UTC), 5, 1, False),
                             ]
 
         with transaction.atomic():
