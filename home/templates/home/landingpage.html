@@ -1,7 +1,17 @@
 {% extends "home/base.html" %}
 {% load static %}
 {% block content %}
+
+
+<link rel="stylesheet" type="text/css" href="{% static 'home/landing-page.css' %}">
 <body class="landing-bg">
-    <img src="{% static 'home/landingGif.gif' %}" alt="Shlifim Landing page gif" class="center"> 
+    <div class="center">
+         <img src="{% static 'home/animated-logo.gif' %}" alt="Shlifim Logo gif" class="row rounded mx-auto d-block my-5" >
+        <div  class=" text-center">
+            <h1 class="text-center font-weight-bold txt">Your place to Ask, Answer & Discover</h1>
+                <a href="{% url 'explore-page' %}" type="button" class="btn m-4 get_started_btn rounded-pill active" aria-pressed="true">Get Started</a>
+        </div>
+
+    </div>
 </body>
 {% endblock content %}
