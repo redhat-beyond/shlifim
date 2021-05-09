@@ -7,5 +7,6 @@ urlpatterns = [
     path('', views.landingpage, name='landingpage'),
     path('explore/question_<int:pk>/', views.displayQuestion, name='question-detail'),
     path('tags/', views.tags, name='tags'),
-    path('explore/', QuestionsListView.as_view(), name='explore-page')
+    path('explore/', QuestionsListView.as_view(), name='explore-page'),
+    path('explore/new_question', views.new_question, name='new_question')
 ]
