@@ -1,0 +1,27 @@
+.main-bg {
+    text-align: center;
+}
+
+.about-us {
+    font-size: 22px;
+}
+
+.contact-us {
+	font-size: 22px;
+}
+
+.column {
+    font-size: 25px;
+    float: left;
+    width: 33.33%;
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+a {
+    color: #0D0D0D;     
+}

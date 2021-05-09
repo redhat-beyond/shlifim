@@ -1,34 +1,87 @@
 {% extends "home/base.html" %}
+{% load static %}
 {% block content %}
-<body class="main-bg">
-    <h1>Shlifim Project - beyond 05 team 3</h1>
-    <img src="https://user-images.githubusercontent.com/40122521/110316976-2990f880-8014-11eb-8ee8-96c21dd4b29f.png"
-        alt="Shlifim">
-    <p>The project will be forum web based application for helping students find answers<br> to their homework and
-        assignments and also share summaries.</p>
-
-    <p>
-    <h2>Coming soon features : </h2>
-    <ul>
-        <li>Login / Register users system</li>
-        <li>Posting a questions under specific topic</li>
-        <li>Answering questions and adding option for up/down votes and
-            reply</li>
-        <li>Main feed showing the latest questions</li>
-        <li>Add option to upload files</li>
-    </ul>
-    </p>
-
-    <p>
-    <h2>Team members :</h2>
-    <ul>
-        <li>Aviv Zafrani</li>
-        <li>Danit Levi </li>
-        <li>Ido Kahlon </li>
-        <li>Rebecca Tubman</li>
-        <li>Lior Noy</li>
-    </ul>
-    </p>
-
+<html>
+    <link rel="stylesheet" type="text/css" href="{% static 'home/CSS/about.css' %}">
+    <body class="main-bg">
+        <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <br><br>
+                <div class="about-us">
+                    <h1><b>About Us</b></h1>
+                    <br>
+                    <p>Shlifim is a forum for helping students find answers to their homework and
+                        assignments.</p>
+                    <p>This web-based application project is part of a course by the Tel Aviv-Yafo Academic College 
+                        under the guidance of RedHat programmers.</p>
+                    <a href="https://github.com/beyond-io/shlifim">Visit our project on Github</a>
+                </div>
+                <br><br>
+                <div class="contact-us">
+                    <h1>Contact Us</h1>
+                    <br>
+                    <p>We are always growing!</p>
+                    <p>If you have any suggestions for new Sub-Subjects or Books please contacts us via:</p>
+                    <a href="mailto:shlifimcontact@gmail.com">shlifimcontact@gmail.com</a>
+                    <br><br>
+                    <div class="column">
+                        <p>Aviv Zafrani</p>
+                        <a href="https://github.com/avivz450">
+                            <img src="{% static 'home/github.png' %}"
+                            width="40" height="40"></a>
+                        &ensp;
+                        <a href="https://www.linkedin.com/in/aviv-zafrani-aa4351180/">
+                            <img src="{% static 'home/linkedin.png' %}"
+                            width="40" height="40"></a>
+                        <br><br>
+                    </div>
+                    <div class="column">
+                        <p>Danit Levi</p>
+                        <a href="https://github.com/danitLevi">
+                            <img src="{% static 'home/github.png' %}"
+                            width="40" height="40"></a>
+                        &ensp;
+                        <a href="https://www.linkedin.com/in/danit-levi/">
+                            <img src="{% static 'home/linkedin.png' %}"
+                            width="40" height="40"></a>
+                        <br><br>
+                    </div>
+                    <div class="column">
+                        <p>Ido Kahlon</p>
+                        <a href="https://github.com/idokk1">
+                            <img src="{% static 'home/github.png' %}"
+                            width="40" height="40"></a>
+                        &ensp;
+                        <a href="https://www.linkedin.com/in/ido-kahlon-61bbb01aa/">
+                            <img src="{% static 'home/linkedin.png' %}"
+                            width="40" height="40"></a>
+                        <br><br>
+                    </div>
+                    <div class="column">
+                        <p>Rebecca Tubman</p>
+                        <a href="https://github.com/rebeccaTubman">
+                            <img src="{% static 'home/github.png' %}"
+                            width="40" height="40"></a>
+                        &ensp;
+                        <a href="https://www.linkedin.com/in/rebecca-tubman/">
+                            <img src="{% static 'home/linkedin.png' %}"
+                            width="40" height="40"></a>
+                        <br><br>
+                    </div>
+                    <div class="column">
+                        <p>Lior Noy</p>
+                        <a href="https://github.com/liornoy">
+                            <img src="{% static 'home/github.png' %}"
+                            width="40" height="40"></a>
+                        &ensp;
+                        <a href="https://www.linkedin.com/in/lior-noy/">
+                            <img src="{% static 'home/linkedin.png' %}"
+                            width="40" height="40"></a>
+                        <br><br>
+                    </div>
+                </div>
+            </div>
+        </div>
 </body>
 {% endblock content %}
