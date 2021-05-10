@@ -1,6 +1,9 @@
 import pytest
 from home.models import Question
 from django.urls import reverse
+from django.test import RequestFactory
+from home.views import QuestionsListView
+from django.db.models import Count
 
 
 class TestExplorePage:
@@ -34,3 +37,30 @@ class TestExplorePage:
 
             questions = Question.objects.all()
             assert set(explore_page_response.context['questions']) == set(questions)
+
+    class testExplorePageSorting:
+        @pytest.fixture
+        def factory(self):
+            return RequestFactory()
+
+        @pytest.mark.django_db
+        def test_explore_page_sort_by_answers_num(self, factory):
+            requested_result = Question.objects.all().annotate(answers_num=Count('answer')).order_by('-answers_num')
+
+            url = reverse('explore-page')
+            request = factory.get(url, {'order_by': 'answersNum'})
+            view = QuestionsListView()
+            view.setup(request)
+            view.object_list = view.get_queryset()
+            assert list(view.get_queryset()) == list(requested_result)
+
+        @pytest.mark.django_db
+        def test_explore_page_sort_by_publish_date(self, factory):
+            requested_result = Question.objects.all().order_by("-publish_date")
+
+            url = reverse('explore-page')
+            request = factory.get(url, {'order_by': '-publish_date'})
+            view = QuestionsListView()
+            view.setup(request)
+            view.object_list = view.get_queryset()
+            assert list(view.get_queryset()) == list(requested_result)
