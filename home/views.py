@@ -2,6 +2,7 @@ from django.shortcuts import render
 from .models import Question, Tag
 from django.views.generic.list import ListView
 from .forms import QuestionForm
+from django.db.models import Count
 
 
 def about(request):
@@ -50,3 +51,13 @@ class QuestionsListView(ListView):
     template_name = 'home/explore.html'
     context_object_name = 'questions'
     ordering = ['-publish_date']
+
+    def get_queryset(self):
+        items_set = Question.objects.all()
+        ordering = self.request.GET.get('order_by', '-publish_date')
+        if ordering == "answersNum":
+            items_set = items_set.annotate(answers_num=Count('answer')).order_by('-answers_num')
+        else:
+            items_set = items_set.order_by(ordering)
+
+        return items_set
