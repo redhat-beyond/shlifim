@@ -282,6 +282,9 @@ class TestInsertQuestionFeature:
             (10, 1, "Question in Math", 'How much is it 1+1?',
              datetime(2022, 4, 7, 12, 53, 29, 4, tzinfo=pytz.UTC), 1, 4, Grade.GRADE7, 1, 10, False),
             # User entered all the fields
+            (10, 1, "Question in Math", None,
+             datetime(2022, 4, 7, 12, 53, 29, 4, tzinfo=pytz.UTC), 1, 4, Grade.GRADE7, 1, 10, False),
+            # User entered all the fields except content
             (11, 2, "Question in History", 'How many wars Israel had?',
              datetime(2022, 4, 7, 12, 59, 55, 4, tzinfo=pytz.UTC), 1, None, Grade.GRADE8, 2, 11, False),
             # User entered all the fields except Sub_Subject
@@ -303,9 +306,6 @@ class TestInsertQuestionFeature:
             ((10, 3, None, 'How much is it 1+1?',
              datetime(2022, 4, 7, 12, 53, 29, 4, tzinfo=pytz.UTC), 1, 4, Grade.GRADE7, 1, 10, False), ValidationError),
             # User didn't enter title
-            ((10, 1, "Question in Math", None,
-             datetime(2022, 4, 7, 12, 53, 29, 4, tzinfo=pytz.UTC), 1, 4, Grade.GRADE7, 1, 10, False), ValidationError),
-            # User did'nt enter content
             ((10, 1, "Question in Math", 'How much is it 1+1?', "", 1, 4, Grade.GRADE7, 1, 10, False), ValidationError),
             # The question does not contain date
             ((10, 1, "Question in Math", 'How much is it 1+1?',
@@ -350,16 +350,18 @@ class TestInsertQuestionFeature:
 
     class TestViews:
         @pytest.mark.parametrize("valid_data", [
-            ({'title': "Question in Math", 'content': 'How much is it 1+1?',
-              'subject': 1, 'grade': Grade.GRADE7}),
+            ({'title': "Question in Math", 'subject': 1, 'grade': Grade.GRADE7}),
             # User entered all the required fields
-            ({'title': "Question in Math", 'content': 'How much is it 1+1?',
+            ({'title': "Question in Math",
+              'subject': 1, 'content': 'How much is it 1+1?', 'grade': Grade.GRADE7}),
+            # User entered all the required fields and content
+            ({'title': "Question in Math",
               'subject': 1, 'grade': Grade.GRADE7, 'sub-subject': 2}),
             # User entered all the required fields and sub-subject
-            ({'title': "Question in Math", 'content': 'How much is it 1+1?',
+            ({'title': "Question in Math",
               'subject': 1, 'grade': Grade.GRADE7, 'book': 2}),
             # User entered all the required fields and sub-subject and book
-            ({'title': "Question in Math", 'content': 'How much is it 1+1?',
+            ({'title': "Question in Math",
               'subject': 1, 'grade': Grade.GRADE7, 'book_page': 23}),
             # User entered all the required fields and a valid book page
         ])
@@ -374,8 +376,6 @@ class TestInsertQuestionFeature:
             assert Question.objects.filter(title=valid_data["title"]).exists()
 
         @pytest.mark.parametrize("invalid_data", [
-            ({'title': "Question in Math", 'subject': 1, 'grade': Grade.GRADE7}),
-            # User entered all the required fields except content
             ({'title': "Question in Math", 'content': 'How much is it 1+1?', 'grade': Grade.GRADE7}),
             # User entered all the required fields except subject
             ({'title': "Question in Math", 'content': 'How much is it 1+1?', 'subject': 1}),
