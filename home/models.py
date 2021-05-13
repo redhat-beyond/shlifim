@@ -3,6 +3,7 @@ from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from ckeditor.fields import RichTextField
+from django.contrib.auth.models import User
 
 
 class Gender(models.TextChoices):
@@ -33,6 +34,13 @@ class Profile(models.Model):
 
     def __str__(self):
         return '{self.user.username}'.format(self=self)
+
+    @classmethod
+    def create(cls, username, password, email, gender='U', is_blocked=False):
+        user = User.objects.create_user(username=username, password=password, email=email)
+        profile = cls(user=user, gender=gender, is_blocked=is_blocked)
+        profile.save()
+        return profile
 
 
 class Subject(models.Model):
