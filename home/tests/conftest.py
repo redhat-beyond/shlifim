@@ -37,3 +37,8 @@ def authenticated_user(client, request):
     client.login(username=username, password=password)
     user = authenticate(request, username=username, password=password)
     return user
+
+
+@pytest.fixture
+def valid_user_details():
+    return {"username": "Lior", "password": "LiorLior"}
