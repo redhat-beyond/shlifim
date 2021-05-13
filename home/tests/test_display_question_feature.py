@@ -1,45 +1,17 @@
 import pytest
-import pytz
-from home.models import Profile, Question, Answer
+from home.models import Question
 from django.urls import reverse
 from django.db.models.query import QuerySet
-from datetime import datetime
+
+
+DISLIKED_ANSWER_ID = 9
+LIKED_ANSWER_ID = 10
+INVALID_ANSWER_ID = 999999
+TEST_QUESTION_ID = 14
 
 
 class TestDisplayQuestionFeature:
     class TestAnswersManipulations:
-        @pytest.fixture
-        def answers(self):
-            profile = Profile.objects.first()
-            question = Question.objects.get(id=3)
-            ans1 = Answer(profile=profile, question=question, content='Answer 1',
-                          publish_date=datetime(2021, 4, 1, tzinfo=pytz.UTC),
-                          likes_count=1, dislikes_count=0, is_edited=False)
-            ans2 = Answer(profile=profile, question=question, content='Answer 2',
-                          publish_date=datetime(2021, 4, 2, tzinfo=pytz.UTC),
-                          likes_count=0, dislikes_count=0, is_edited=False)
-            ans1.save()
-            ans2.save()
-            return [ans1, ans2]
-
-        @pytest.mark.django_db
-        def test_thumb_up_answer(self, answers):
-            """
-            thumb_up_answer(answer_id) increase the thumbs up field of an answer by one
-            """
-            prev_thumb_val = answers[0].likes_count
-            answers[0].thumb_up_answer()
-            assert(prev_thumb_val == answers[0].likes_count - 1)
-
-        @pytest.mark.django_db
-        def test_thumb_down_answer(self, answers):
-            """
-            thumb_down_answer(answer_id) increase the thumbs down field of an answer by one
-            """
-            prev_thumb_val = answers[0].dislikes_count
-            answers[0].thumb_down_answer()
-            assert(prev_thumb_val == answers[0].dislikes_count - 1)
-
         @pytest.mark.django_db
         def test_set_is_edited(self, answers):
             """
@@ -97,12 +69,14 @@ class TestDisplayQuestionFeature:
             '''
             expectedPairs = [
                 ('question', 'Question #14 : g forwards, it was even later than ( 28/04/2021 23:14 )'),
-                ('answers', '<QuerySet [<Answer: Answer B>, <Answer: Answer A>,\
- <Answer: Popular Answer>, <Answer: Old Answer>]>'),
+                ('answers_tuples', '[(<Answer: Answer B>, False, False), ' +
+                 '(<Answer: Answer A>, False, False), ' +
+                 '(<Answer: Popular Answer>, False, False), ' +
+                 '(<Answer: Old Answer>, False, False)]'),
                 ('answersCount', '4'),
-                ('tags', '<QuerySet [{\'id\': 3, \'tag_name\': \'Bagrut_Exam\'}, \
-{\'id\': 4, \'tag_name\': \'Hebrew\'}, {\'id\': 8, \'tag_name\': \'java\'}, \
-{\'id\': 13, \'tag_name\': \'all_my_sons\'}]>'),
+                ('tags', '<QuerySet [{\'id\': 3, \'tag_name\': \'Bagrut_Exam\'}, ' +
+                 '{\'id\': 4, \'tag_name\': \'Hebrew\'}, {\'id\': 8, \'tag_name\': \'java\'}, ' +
+                 '{\'id\': 13, \'tag_name\': \'all_my_sons\'}]>'),
                 ('title', 'History-g forwards, it was even later than')
                 ]
             for check, expected in expectedPairs:
@@ -113,7 +87,7 @@ class TestDisplayQuestionFeature:
         def test_sorting_answers(self, client, filterType, expected):
             url = f'/explore/question_14/?sortanswersby={filterType}'
             response = client.get(url)
-            answer = response.context['answers'].first()
+            answer = response.context['answers_tuples'][0][0]
             assert str(answer.content) == expected
 
         @pytest.mark.django_db
@@ -127,3 +101,49 @@ class TestDisplayQuestionFeature:
             url = '/explore/question_1/?sortanswersby=BAD'
             response = client.get(url)
             assert response.status_code == 404
+
+    class TestThumbsRouting:
+        @pytest.mark.django_db
+        def test_logged_user_good_route(self, logged_client):
+            response = logged_client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/up/{DISLIKED_ANSWER_ID}')
+            assert response.status_code == 302
+            assert response.url == f"/explore/question_{TEST_QUESTION_ID}/"
+
+        @pytest.mark.parametrize(('bad_url'), [(f'/explore/question_{TEST_QUESTION_ID}/thumb/BAD/{DISLIKED_ANSWER_ID}'),
+                                 (f'/explore/question_{TEST_QUESTION_ID}/thumb/up/{INVALID_ANSWER_ID}')])
+        @pytest.mark.django_db
+        def test_logged_user_bad_route(self, logged_client, bad_url):
+            response = logged_client.get(bad_url)
+            assert response.status_code == 404
+
+        @pytest.mark.django_db
+        def test_unauthorized_response(self, client):
+            response = client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/up/9')
+            assert response.status_code == 401
+
+    class TestThumbsView:
+        @pytest.mark.parametrize(('answer_id', 'thumb_type', 'like_val', 'false_val'),
+                                 [(DISLIKED_ANSWER_ID, 'up', True, False),
+                                 (LIKED_ANSWER_ID, 'up', False, False),
+                                 (DISLIKED_ANSWER_ID, 'down', False, False),
+                                 (LIKED_ANSWER_ID, 'down', False, True)])
+        @pytest.mark.django_db
+        def test_thumbs_view(self, logged_client, answer_id, thumb_type, like_val, false_val):
+            response = logged_client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/{thumb_type}/{answer_id}')
+            response = logged_client.get(response.url)
+            answers_tuples = response.context['answers_tuples']
+            for answer, like, dislike in answers_tuples:
+                if answer.id == answer_id:
+                    assert like == like_val and dislike == false_val
+
+        @pytest.mark.django_db
+        def test_like_dislike_fields_update(self, answers, logged_client):
+            answer_id1 = answers[0].id
+            answer_id2 = answers[1].id
+            assert answers[0].likes.exists() is False
+            assert answers[1].dislikes.exists() is False
+            logged_client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/up/{answer_id1}')
+            response = logged_client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/down/{answer_id2}')
+            profile = response.wsgi_request.profile
+            assert profile in answers[0].likes.all()
+            assert profile in answers[1].dislikes.all()
