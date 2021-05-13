@@ -41,3 +41,8 @@ class TestLogin:
         response = client.get('/')
         assert "Login" not in str(response.content)
         assert "Logout" in str(response.content)
+
+    @pytest.mark.parametrize(('next'), [('about'), ('explore'), ('tags')])
+    def test_redirection_to_last_page_url(self, client, next, valid_user_details):
+        response = client.post('/login/?next=/{0}/'.format(next), valid_user_details)
+        assert response.url == '/{0}/'.format(next)
