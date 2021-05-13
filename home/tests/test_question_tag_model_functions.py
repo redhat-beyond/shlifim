@@ -1,7 +1,5 @@
 import pytest
-from home.models import Profile, Subject, Question, Tag, Question_Tag
-from django.contrib.auth.models import User
-from django.utils import timezone
+from home.models import Tag, Question_Tag
 
 
 class TestQuestionTagModelFunctions:
@@ -47,24 +45,6 @@ class TestQuestionTagModelFunctions:
     @pytest.mark.django_db
     def test_tags_feed_no_result(self):
         assert Tag.tags_feed('testtesttesttest').count() == 0
-
-    @pytest.fixture
-    def question_test_data(self):
-        user = User.objects.get(username='Rebecca')
-        profile = Profile.objects.get(user=user)
-        subject = Subject.objects.get(subject_name='Physics')
-        question = Question(profile=profile,
-                            title='Question test data',
-                            content='Will this question test data pass?',
-                            publish_date=timezone.now(),
-                            subject=subject,
-                            sub_subject=None,
-                            grade='10',
-                            book=None,
-                            book_page=None,
-                            is_edited=False)
-        question.save()
-        return question
 
     @pytest.fixture
     def tag_test_data(self):
