@@ -100,8 +100,9 @@ class TestDisplayQuestionFeature:
                 ('answers', '<QuerySet [<Answer: Answer B>, <Answer: Answer A>,\
  <Answer: Popular Answer>, <Answer: Old Answer>]>'),
                 ('answersCount', '4'),
-                ('tags', '<QuerySet [{\'id\': 3, \'tag_name\': \'Bagrut_Exam\'},\
- {\'id\': 4, \'tag_name\': \'Hebrew\'}]>'),
+                ('tags', '<QuerySet [{\'id\': 3, \'tag_name\': \'Bagrut_Exam\'}, \
+{\'id\': 4, \'tag_name\': \'Hebrew\'}, {\'id\': 8, \'tag_name\': \'java\'}, \
+{\'id\': 13, \'tag_name\': \'all_my_sons\'}]>'),
                 ('title', 'History-g forwards, it was even later than')
                 ]
             for check, expected in expectedPairs:
