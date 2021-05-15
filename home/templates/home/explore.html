@@ -29,8 +29,17 @@
             <div class="col-3">
                 <a style="color:#6FB5EE" href="{% url 'question-detail' question.id %}"><b>{{ question.title }}</b></a>
             </div>
-            <div class="col">
-                <span>{{ question.subject }} ,{{ question.sub_subject }}</span>
+            <div class="col-3">
+                <div class="row">
+                    <span>{{ question.subject }} ,{{ question.sub_subject }}</span>
+                </div>
+                <div class="row mt-2">
+                        <div >
+                            {% for tag in question.tag_set.all %}
+                                <span class="badge badge-pill badge-secondary">#{{tag.tag_name}}</span>
+                            {% endfor %}
+                        </div>
+                </div>
             </div>
             <div class=" col">
                 <p>{{question.get_grade_display }} </p>
