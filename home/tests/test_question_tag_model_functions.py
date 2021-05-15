@@ -8,9 +8,9 @@ class TestQuestionTagModelFunctions:
         test_tags = ['test_tag_1', 'test_tag_2', 'test_tag_3']
         question_test_data.add_tags_to_question(test_tags)
 
-        assert list(question_test_data.tags.values()) == [{'id': 5, 'tag_name': 'test_tag_1'},
-                                                          {'id': 6, 'tag_name': 'test_tag_2'},
-                                                          {'id': 7, 'tag_name': 'test_tag_3'}]
+        assert list(question_test_data.tags.values()) == [{'id': 21, 'tag_name': 'test_tag_1'},
+                                                          {'id': 22, 'tag_name': 'test_tag_2'},
+                                                          {'id': 23, 'tag_name': 'test_tag_3'}]
 
     @pytest.mark.django_db
     def test_field_questions_in_tag(self, question_tag_test_data):
@@ -27,11 +27,11 @@ class TestQuestionTagModelFunctions:
 
     @pytest.mark.django_db
     def test_tags_feed_no_parameters(self):
-        assert Tag.tags_feed().count() == 4
+        assert Tag.tags_feed().count() == 20
 
     @pytest.mark.django_db
     def test_tags_feed_with_test_tag(self, tag_test_data):
-        assert tag_test_data.tags_feed().count() == 5
+        assert tag_test_data.tags_feed().count() == 21
 
     @pytest.mark.django_db
     def test_tags_feed_with_filter(self, tag_test_data):
@@ -40,7 +40,7 @@ class TestQuestionTagModelFunctions:
     @pytest.mark.django_db
     def test_tags_feed_after_delete(self, tag_test_data):
         Tag.objects.filter(tag_name='test_tag_1').delete()
-        assert Tag.tags_feed().count() == 4
+        assert Tag.tags_feed().count() == 20
 
     @pytest.mark.django_db
     def test_tags_feed_no_result(self):
