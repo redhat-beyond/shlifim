@@ -84,3 +84,11 @@ class TestExplorePage:
             url = f'/explore/?tag={invalid_tag_name}'
             response = client.get(url)
             assert response.status_code == 404
+
+        @pytest.mark.parametrize("tag_name", [
+            '#Pitagoras',
+            '#Bagrut_Exam'
+        ])
+        @pytest.mark.django_db
+        def test_explore_page_tags_view(self, explore_page_response, tag_name):
+            assert tag_name in str(explore_page_response.content)
