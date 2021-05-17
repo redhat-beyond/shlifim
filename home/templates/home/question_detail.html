@@ -36,7 +36,7 @@
 		{% if question.is_edited %}
 			<small class="text-muted date ml-3"><span>*edited*</span></small>
 			{% endif %}
-		<a>by <a class="mr-2" style="color:#6FB5EE" href="#"> <b>{{ question.profile }}</b></a></a>
+		<b>by {{ question.profile }} </b>
 	  </div>
 		<div class="question-body">
 		  <p class="question-content">{{ question.content }}</p>
