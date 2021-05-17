@@ -47,13 +47,12 @@
 			  {% if user.is_authenticated %}
 			  <ul class="nav navbar-nav" >
 				<li><p class="nav-item m-2"><b>Hello {{user.username}}</b></p></li>
-				<li><a class="nav-item nav-link m-2 " href="#"><b>Profile</b></a></li>
 				<li><a class="nav-item nav-link m-2" href="{% url 'logout' %}?next={% firstof request.path '/' %}"><b>Logout</b></a></li>
 			  </ul>
 			  {% else %}
 			  <p class="nav-item nav-link m-2"><b>Hello visitor</b></p>
 				<a class="nav-item nav-link m-2" href="{% url 'login' %}?next={% firstof request.path '/' %}"><b>Login</b></a>
-				<a class="nav-item nav-link m-2" href="#"><b>Register<b></a>
+				<a class="nav-item nav-link m-2" href="#"><b>Register</b></a>
 			  {% endif %}
 			</div>
 		</div>
