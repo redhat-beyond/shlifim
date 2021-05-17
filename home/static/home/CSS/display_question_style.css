@@ -139,3 +139,8 @@ padding-right:5px;
 .date{
 	float:left;
 }
+
+.add-comment{
+  padding:20px;
+  overflow:hidden;
+}

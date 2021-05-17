@@ -7,7 +7,7 @@ from django.db import migrations
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0017_alter_question_content'),
+        ('home', '0018_add_tags_test_data'),
     ]
 
     operations = [
