@@ -141,7 +141,7 @@ class Question(models.Model):
 class Answer(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    content = models.TextField()
+    content = RichTextField(blank=True, null=True)
     publish_date = models.DateTimeField(default=timezone.now)
     likes = models.ManyToManyField(Profile, blank=True, related_name='user_answer_likes')
     dislikes = models.ManyToManyField(Profile, blank=True, related_name='user_answer_dislikes')
@@ -188,6 +188,15 @@ class Answer(models.Model):
         for answer in answers:
             answers_tuples.append((answer, answer.profile_liked(profile), answer.profile_disliked(profile)))
         return answers_tuples
+
+    @property
+    def show_content(self):
+        from django.utils.html import strip_tags
+        return strip_tags(self.content)
+
+    @classmethod
+    def get_answers_by_date(cls):
+        return cls.objects.order_by('-publish_date')
 
 
 class Tag(models.Model):
