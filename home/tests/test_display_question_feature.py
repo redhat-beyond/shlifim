@@ -115,3 +115,15 @@ class TestDisplayQuestionFeature:
             response = client.get(url)
             answer = response.context['answers'].first()
             assert str(answer.content) == expected
+
+        @pytest.mark.django_db
+        def test_invalid_question_url(self, client):
+            url = reverse('question-detail', args=[Question.objects.count()+1])
+            response = client.get(url)
+            assert response.status_code == 404
+
+        @pytest.mark.django_db
+        def test_invalid_answersort_url(self, client):
+            url = '/explore/question_1/?sortanswersby=BAD'
+            response = client.get(url)
+            assert response.status_code == 404

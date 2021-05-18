@@ -4,6 +4,7 @@ from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
 from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
+from django.http import Http404
 
 
 class Gender(models.TextChoices):
@@ -125,6 +126,8 @@ class Question(models.Model):
             answers = answers.order_by('-publish_date')
         elif filterType == 'votes':
             answers = answers.order_by('-likes_count')
+        else:
+            raise Http404()
         return answers
 
     def get_question_title(self):
