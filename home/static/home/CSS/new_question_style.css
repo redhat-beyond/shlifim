@@ -1,0 +1,39 @@
+body {
+	margin: auto;
+	background-color: #D9B6A3;
+}
+
+.column {
+  	float: left;
+	width: 27%;
+}
+
+.left, .right {
+  	width: 25%;
+}
+
+.middle {
+  	width: 50%;
+}
+
+.msg{
+	background-color: #F2DDCB;
+	display: inline-block;
+	padding: 50px;
+	border-radius: 12px;
+}
+
+.submit-btn{
+	background-color:#A9D4D9;
+	color: black;
+ 	padding: 10px 20px;
+	text-align: center;
+	font-size: 20px;
+	border: none;
+	text-decoration: none;
+	border-radius: 12px;
+}
+
+.submit-btn:hover {
+	text-decoration: none;
+}

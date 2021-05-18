@@ -1,25 +1,32 @@
-        body{
-         background: url("/static/home/background.png") no-repeat center center fixed;
-         -webkit-background-size: cover;
-         -moz-background-size: cover;
-         -o-background-size: cover;
-         background-size: cover;
-        }
+body {
+	background: url("/static/home/background.png") no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
 
-        .txt{
-            color:#593f27
-        }
+.txt {
+	color:#593f27
+}
 
-        .get_started_btn{
-            background-color:#593f27;
-            color:white;
-            padding: 15px 32px;
-            text-align: center;
-            font-size: 30px;
-            border: none;
-            text-decoration: none;
-        }
-        .get_started_btn:hover
-        {
-            text-decoration: none;
-        }
+.center{
+	position: fixed;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+.get_started_btn {
+	background-color:#593f27;
+	color:white;
+	padding: 15px 32px;
+	text-align: center;
+	font-size: 30px;
+	border: none;
+	text-decoration: none;
+}
+
+.get_started_btn:hover {
+	text-decoration: none;
+}

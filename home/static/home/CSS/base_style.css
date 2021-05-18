@@ -22,7 +22,18 @@ body {
 }
 
 .shlifim-btn{
-	background-color: #A9D4D9;
+	background-color:#A9D4D9;
+	color: black;
+ 	padding: 10px 20px;
+	text-align: center;
+	font-size: 20px;
+	border: none;
+	text-decoration: none;
+	border-radius: 12px;
+}
+
+.shlifim-btn:hover {
+	text-decoration: none;
 }
 
 .navbar-nav > li {

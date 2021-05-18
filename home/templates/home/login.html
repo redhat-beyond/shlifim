@@ -1,16 +1,21 @@
 {% extends "home/base.html" %}
-
-{% block title %}Login{% endblock %}
-
+{% load static %}
 {% block content %}
-<body class="main-bg">
-  <div class="mx-auto" style="width: 200px;">
-    <h2>Login</h2>
-    <form method="post">
-      {% csrf_token %}
-      {{ form.as_p }}
-      <button type="submit">Login</button>
-    </form>
-  <div>
-</body>
+<link rel="stylesheet" type="text/css" href="{% static 'home/CSS/login_style.css' %}">
+<html>
+  <body class ="main-bg">
+    <br><br>
+    <div class="content">
+    <h1>Login</h1>
+    <br><br>
+      <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <br><br>
+        <button type="submit" class="login-btn">Login</button>
+      </form>
+    </div>
+  </body>
+   
+</html>
 {% endblock %}
