@@ -6,20 +6,28 @@
 <body class="main-bg">
 
 <form method="GET" class="container">
-<div class="m-5" >
+<div class="m-3" >
 
-    <div class="row mb-4">
+    <div class="row my-4">
         <div class="col-2">
             <a href="{% url 'new_question' %}" class="btn shlifim-btn" role="button">Ask new question</a>
         </div>
 
     </div>
 
+    {% if tag != None %}
+    <div class="tags-msg p-3">
+        <p><b>Showing all questions that include the tag: #{{ tag }}</b></p>
+        <a href="{% url 'explore-page' %}"><small>Show me all questions</small></a>
+    </div>
+
+    {% endif %}
+
 	{% for question in questions %}
 	<div class=" question-display p-2 row m-0 border">
 	    <img class="subject-img" src="{% get_static_prefix %}home\subjects-images\{{question.subject|lower}}.png">
             <div class="col-3">
-                <a style="color:#6FB5EE" href="{% url 'question-detail' question.id %}"><b>{{question.title }}</b></a>
+                <a style="color:#6FB5EE" href="{% url 'question-detail' question.id %}"><b>{{ question.title }}</b></a>
             </div>
             <div class="col">
                 <span>{{ question.subject }} ,{{ question.sub_subject }}</span>

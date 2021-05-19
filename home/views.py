@@ -49,7 +49,24 @@ def new_question(request):
 
 
 class QuestionsListView(ListView):
+
     model = Question
     template_name = 'home/explore.html'
-    context_object_name = 'questions'
     ordering = ['-publish_date']
+
+    def get_context_data(self, **kwargs):
+        requested_tag_name = self.request.GET.get('tag', None)
+
+        if requested_tag_name:
+            requested_tag_obj = get_object_or_404(Tag, tag_name=requested_tag_name)
+            items_set = requested_tag_obj.question_set.all()
+        else:
+            items_set = Question.objects.all()
+
+        context = {
+            'tag': requested_tag_name,
+            'questions': items_set,
+        }
+
+        context.update(kwargs)
+        return super().get_context_data(**context)

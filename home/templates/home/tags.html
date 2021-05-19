@@ -18,11 +18,14 @@
                 <br><br>
                 <div class="wrapper">
                     {% for tag in tags %}
-                    <div class="card border-secondary mb-3">
-                        <div class="card-body">
-                            <p class="card-text">{{tag.tag_name}}</p>
+
+                      <div class="card border-secondary mb-3">
+                            <div class="card-body">
+                                <p class="card-text tag-text">
+                                    <a href="{% url 'explore-page' %}?tag={{ tag }}">#{{ tag.tag_name }}</a>
+                                </p>
+                            </div>
                         </div>
-                    </div>
                     {% endfor %}
                 </div>
             </div>

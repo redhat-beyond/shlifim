@@ -34,3 +34,13 @@ class TestTagsPage:
         response = client.get('/tags/?q=' + search)
         assert response.status_code == 200
         assert included in str(response.context['tags'])
+
+    @pytest.mark.parametrize('tag_name', [
+        "Bagrut_Exam",
+        "5th_Grade",
+    ])
+    @pytest.mark.django_db
+    def test_tags_link(self, tags_response, tag_name):
+        char_content = str(tags_response.content)
+        requested_link = "/explore/?tag="+tag_name
+        assert requested_link in char_content
