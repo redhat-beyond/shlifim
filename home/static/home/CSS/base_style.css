@@ -2,23 +2,30 @@ body {
     font-family: Montserrat, sans-serif;
 }
 
-.navbar-light{
+.navbar-light {
 	background-color: #a9d4d9;
 }
 
-.main-bg{
+.main-bg {
 	background-color: #d9b6a3;
 }
 
-.landing-bg{
+.landing-bg {
 	background-color: #f2dccb;
 }
 
-.nav-item{
+.nav-item {
 	color: #000000;
 	padding-top: 20px;
+	font-weight: bold;
+	font-size: 17px;
 }
 
 .shlifim-btn{
-  background-color: #A9D4D9;
+	background-color: #A9D4D9;
+}
+
+.navbar-nav > li {
+	padding-left:5px;
+	padding-right:5px;
 }
