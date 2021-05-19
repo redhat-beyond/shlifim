@@ -1,16 +1,25 @@
 {% extends "home/base.html" %}
 {% load static %}
 {% block content %}
-
+<link rel="stylesheet" type="text/css" href="{% static 'home/CSS/new_question_style.css' %}">
 <body class="main-bg">
-    <div class="newfrm">
-        <p class="newmsg">Please add a new question : </p>
-        <form method="POST">
-            {% csrf_token %}
-            {{ form.media }}
-            {{ form.as_p }}
-            <input type="submit" value="Post">
-        </form>
+    <br><br>
+    <div class="row pb-3">
+        <div class="column"></div>
+        <div class="column">
+            <div class="msg">
+                <center><h1>Add a New Question:</h1></center>
+                <br><br>
+                <form method="POST">
+                    {% csrf_token %}
+                    {{ form.media }}
+                    {{ form.as_p }}
+                    <input class="submit-btn" type="submit" value="Post">
+                </form>
+            </div>
+        </div>
+        <div class="column"></div>
+    </div>
     </div>
 </body>
 
