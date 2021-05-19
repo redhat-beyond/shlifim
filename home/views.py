@@ -1,7 +1,8 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import Question, Tag
 from django.views.generic.list import ListView
 from .forms import QuestionForm
+from django.contrib.auth.decorators import login_required
 
 
 def about(request):
@@ -34,6 +35,7 @@ def tags(request):
     return render(request, 'home/tags.html', {'tags': tags})
 
 
+@login_required(login_url='/login/')
 def new_question(request):
     form = QuestionForm
     if request.method == 'POST':
@@ -42,6 +44,7 @@ def new_question(request):
             questForm = questForm.save(commit=False)
             questForm.profile = request.profile
             questForm.save()
+            return redirect('question-detail', questForm.id)
     return render(request, 'home/questions/new_question.html', {'form': form, 'title': 'New Question'})
 
 

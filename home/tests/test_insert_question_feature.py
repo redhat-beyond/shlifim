@@ -99,20 +99,22 @@ class TestInsertQuestionFeature:
             # User entered all the required fields and sub-subject
             ({'title': "Question in Math",
               'subject': 1, 'grade': Grade.GRADE7, 'book': 2}),
-            # User entered all the required fields and sub-subject and book
+            # User entered all the required fields, sub-subject and book
             ({'title': "Question in Math",
               'subject': 1, 'grade': Grade.GRADE7, 'book_page': 23}),
             # User entered all the required fields and a valid book page
         ])
         @pytest.mark.django_db
-        def test_post_valid_question_with_client(self, client, valid_data):
+        def test_post_valid_question_with_client(self, client, valid_data, authenticated_user):
             with pytest.raises(Question.DoesNotExist):
                 assert Question.objects.get(title=valid_data["title"])
 
-            client.login(username='Lior', password='LiorLior')
-            client.post('/explore/new_question', data=valid_data)
+            response = client.post('/explore/new_question', data=valid_data)
 
             assert Question.objects.filter(title=valid_data["title"]).exists()
+            assert response.status_code == 302
+            question_id = Question.objects.get(title=valid_data["title"]).id
+            assert response.url == "/explore/question_" + str(question_id) + "/"
 
         @pytest.mark.parametrize("invalid_data", [
             ({'title': "Question in Math", 'content': 'How much is it 1+1?', 'grade': Grade.GRADE7}),
@@ -125,16 +127,14 @@ class TestInsertQuestionFeature:
             # User entered all the required fields and to high book page
         ])
         @pytest.mark.django_db
-        def test_post_invalid_question_with_client(self, client, invalid_data):
-            client.login(username='Lior', password='LiorLior')
+        def test_post_invalid_question_with_client(self, client, invalid_data, authenticated_user):
             client.post('/explore/new_question', data=invalid_data)
 
             with pytest.raises(Question.DoesNotExist):
                 assert Question.objects.get(title=invalid_data["title"])
 
         @pytest.mark.django_db
-        def test_post_question_without_title_with_client(self, client):
-            client.login(username='Lior', password='LiorLior')
+        def test_post_question_without_title_with_client(self, client, authenticated_user):
             client.post('/explore/new_question', data={'content': 'How much is it 1+1?',
                                                        'subject': 1, 'grade': Grade.GRADE7})
 
@@ -142,9 +142,15 @@ class TestInsertQuestionFeature:
                 assert Question.objects.get(content='How much is it 1+1?')
 
         @pytest.mark.django_db
-        def test_question_form_and_template_displayed(self, client):
+        def test_question_form_and_template_displayed(self, client, authenticated_user):
             response = client.get('/explore/new_question')
 
             assert response.status_code == 200
             assert isinstance(response.context['form'], type(QuestionForm))
             assertTemplateUsed(response, 'home/questions/new_question.html')
+
+        def test_redirection_user_logged_out(self, client):
+            response = client.get('/explore/new_question')
+
+            assert response.status_code == 302
+            assert response.url == '/login/?next=/explore/new_question'
