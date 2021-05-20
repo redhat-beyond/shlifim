@@ -1,7 +1,8 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from .models import Question, Tag, Profile
+from .models import Question, Tag, Profile, Answer
 from django.views.generic.list import ListView
 from .forms import QuestionForm, SignUpForm
+from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 
@@ -16,15 +17,31 @@ def landingpage(request):
 
 def displayQuestion(request, **kwargs):
     question = get_object_or_404(Question, id=kwargs['pk'])
-    sortAnsBy = request.GET["sortanswersby"] if 'sortanswersby' in request.GET else ''
+    sort_answer_by = request.GET.get("sortanswersby", "")
     context = {
         "question": question,
-        "answers": question.get_answers_feed(sortAnsBy),
+        "answers_tuples": Answer.get_answers_tuples(question, sort_answer_by, request.profile),
         "answersCount": question.answer_set.count(),
         "tags": question.tags.values(),
-        "title": question.get_question_title()
+        "title": question.get_question_title(),
+        "is_user_logged_in": request.user.is_authenticated
     }
     return render(request, 'home/question_detail.html', context)
+
+
+def thumbs(request, **kwargs):
+    if request.user.is_authenticated:
+        question_id = kwargs['question_pk']
+        answer = get_object_or_404(Answer, pk=kwargs['answer_pk'])
+        if kwargs['string'] == 'up':
+            answer.handle_thumb_up(request.profile)
+        elif kwargs['string'] == 'down':
+            answer.handle_thumb_down(request.profile)
+        else:
+            raise Http404
+        return redirect('question-detail', question_id)
+    else:
+        return HttpResponse('Unauthorized', status=401)
 
 
 def tags(request):

@@ -5,6 +5,7 @@ from django.core.validators import MinValueValidator, MaxValueValidator
 from django.contrib.auth.models import User
 from django.http import Http404
 from .RichTextBleachField import RichTextBleachField
+from django.db.models import Count
 
 
 class Gender(models.TextChoices):
@@ -125,7 +126,7 @@ class Question(models.Model):
         if filterType == 'date' or filterType == '':
             answers = answers.order_by('-publish_date')
         elif filterType == 'votes':
-            answers = answers.order_by('-likes_count')
+            answers = answers.annotate(q_count=Count('likes')).order_by('-q_count')
         else:
             raise Http404()
         return answers
@@ -142,22 +143,51 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     content = models.TextField()
     publish_date = models.DateTimeField(default=timezone.now)
-    likes_count = models.IntegerField(default=0)
-    dislikes_count = models.IntegerField(default=0)
+    likes = models.ManyToManyField(Profile, blank=True, related_name='user_answer_likes')
+    dislikes = models.ManyToManyField(Profile, blank=True, related_name='user_answer_dislikes')
     is_edited = models.BooleanField(default=False)
-    ordering = ['likes_count']
+    ordering = ['publish_date']
 
     def __str__(self):
         return self.content
 
-    def thumb_up_answer(self):
-        self.likes_count = self.likes_count + 1
+    def profile_liked(self, profile):
+        return profile in self.likes.all()
 
-    def thumb_down_answer(self):
-        self.dislikes_count = self.dislikes_count + 1
+    def profile_disliked(self, profile):
+        return profile in self.dislikes.all()
 
     def set_is_edited(self, newVal):
         self.is_edited = newVal
+
+    def handle_thumb_up(self, profile):
+        liked = self.likes.filter(user_id=profile.user_id).exists()
+        disliked = self.dislikes.filter(user_id=profile.user_id).exists()
+        if liked:
+            self.likes.remove(profile)
+        else:
+            self.likes.add(profile)
+        if disliked:
+            self.dislikes.remove(profile)
+
+    def handle_thumb_down(self, profile):
+        liked = self.likes.filter(user_id=profile.user_id).exists()
+        disliked = self.dislikes.filter(user_id=profile.user_id).exists()
+
+        if disliked:
+            self.dislikes.remove(profile)
+        else:
+            self.dislikes.add(profile)
+        if liked:
+            self.likes.remove(profile)
+
+    @classmethod
+    def get_answers_tuples(cls, question, sort_answer_by, profile):
+        answers = question.get_answers_feed(sort_answer_by)
+        answers_tuples = []
+        for answer in answers:
+            answers_tuples.append((answer, answer.profile_liked(profile), answer.profile_disliked(profile)))
+        return answers_tuples
 
 
 class Tag(models.Model):
