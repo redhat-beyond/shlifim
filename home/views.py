@@ -5,6 +5,7 @@ from .forms import QuestionForm, SignUpForm, CommentForm
 from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
+from django.contrib import messages
 
 
 def about(request):
@@ -72,10 +73,23 @@ def new_question(request):
     if request.method == 'POST':
         questForm = QuestionForm(request.POST)
         if questForm.is_valid():
-            questForm = questForm.save(commit=False)
-            questForm.profile = request.profile
-            questForm.save()
-            return redirect('question-detail', questForm.id)
+            tags_array = [t.strip().lower() for t in questForm.cleaned_data['tags_'].split(',')]
+            tags_status = Tag.check_tag_array(tags_array)
+            if(not questForm.data['tags_'] or tags_status):
+                questForm = questForm.save(commit=False)
+                questForm.profile = request.profile
+                questForm.save()
+                if(tags_status):
+                    questionInstane = Question.objects.get(id=questForm.id)
+                    questionInstane.add_tags_to_question(tags_array)
+                return redirect('question-detail', questForm.id)
+            else:
+                tags_error_msg = '''Invalid data.
+             You may enter up to 5 tags which are separated by ",".
+             Each tag must have between 2-20 characters.'''
+                messages.error(request, tags_error_msg)
+        else:
+            messages.error(request, 'Invalid data. Book number must be between 1-999.')
     return render(request, 'home/questions/new_question.html', {'form': form, 'title': 'New Question'})
 
 

@@ -25,33 +25,6 @@ class TestQuestionTagModelFunctions:
         question_test_data.add_tags_to_question(['test_tag_2', 'test_tag_3'])
         assert question_test_data.tags.values().count() == 2
 
-    @pytest.mark.django_db
-    def test_tags_feed_no_parameters(self):
-        assert Tag.tags_feed().count() == 20
-
-    @pytest.mark.django_db
-    def test_tags_feed_with_test_tag(self, tag_test_data):
-        assert tag_test_data.tags_feed().count() == 21
-
-    @pytest.mark.django_db
-    def test_tags_feed_with_filter(self, tag_test_data):
-        assert Tag.tags_feed('_t').count() == 1
-
-    @pytest.mark.django_db
-    def test_tags_feed_after_delete(self, tag_test_data):
-        Tag.objects.filter(tag_name='test_tag_1').delete()
-        assert Tag.tags_feed().count() == 20
-
-    @pytest.mark.django_db
-    def test_tags_feed_no_result(self):
-        assert Tag.tags_feed('testtesttesttest').count() == 0
-
-    @pytest.fixture
-    def tag_test_data(self):
-        tag = Tag(tag_name='test_tag_1')
-        tag.save()
-        return tag
-
     @pytest.fixture
     def question_tag_test_data(self, question_test_data):
         test_tag = Tag()
