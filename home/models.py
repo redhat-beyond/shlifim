@@ -2,9 +2,9 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.core.validators import MinValueValidator, MaxValueValidator
-from ckeditor.fields import RichTextField
 from django.contrib.auth.models import User
 from django.http import Http404
+from .RichTextBleachField import RichTextBleachField
 
 
 class Gender(models.TextChoices):
@@ -84,7 +84,7 @@ class Grade(models.TextChoices):
 class Question(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     title = models.CharField(max_length=50)
-    content = RichTextField(blank=True, null=True)
+    content = RichTextBleachField(blank=True, null=True)
     publish_date = models.DateTimeField(default=timezone.now)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
     sub_subject = models.ForeignKey(Sub_Subject, on_delete=models.CASCADE, blank=True, null=True)  # field not required

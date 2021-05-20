@@ -21,7 +21,7 @@ class TestInsertQuestionFeature:
             (10, 1, "Question in Math", 'How much is it 1+1?',
              datetime(2022, 4, 7, 12, 53, 29, 4, tzinfo=pytz.UTC), 1, 4, Grade.GRADE7, 1, 10, False),
             # User entered all the fields
-            (10, 1, "Question in Math", None,
+            (10, 1, "Question in Math", "",
              datetime(2022, 4, 7, 12, 53, 29, 4, tzinfo=pytz.UTC), 1, 4, Grade.GRADE7, 1, 10, False),
             # User entered all the fields except content
             (11, 2, "Question in History", 'How many wars Israel had?',
@@ -110,7 +110,6 @@ class TestInsertQuestionFeature:
                 assert Question.objects.get(title=valid_data["title"])
 
             response = client.post('/explore/new_question', data=valid_data)
-
             assert Question.objects.filter(title=valid_data["title"]).exists()
             assert response.status_code == 302
             question_id = Question.objects.get(title=valid_data["title"]).id
@@ -129,7 +128,6 @@ class TestInsertQuestionFeature:
         @pytest.mark.django_db
         def test_post_invalid_question_with_client(self, client, invalid_data, authenticated_user):
             client.post('/explore/new_question', data=invalid_data)
-
             with pytest.raises(Question.DoesNotExist):
                 assert Question.objects.get(title=invalid_data["title"])
 
@@ -154,3 +152,21 @@ class TestInsertQuestionFeature:
 
             assert response.status_code == 302
             assert response.url == '/login/?next=/explore/new_question'
+
+        @pytest.mark.django_db
+        def test_valid_tags_not_removed_from_question(self, client, authenticated_user):
+            data = {'title': "Question in Math",
+                    'subject': 1, 'content': '<p>a</p>',
+                    'grade': Grade.GRADE7}
+            client.post('/explore/new_question', data=data)
+            question = Question.objects.filter(title=data["title"]).first()
+            assert "<p>" in question.content
+
+        @pytest.mark.django_db
+        def test_invalid_tags_removed_from_question(self, client, authenticated_user):
+            data = {'title': "Question in Math",
+                    'subject': 1, 'content': '<script language = "javascript" > alert("You are PWNED!") </script>',
+                    'grade': Grade.GRADE7}
+            client.post('/explore/new_question', data=data)
+            question = Question.objects.filter(title=data["title"]).first()
+            assert "<script>" not in question.content

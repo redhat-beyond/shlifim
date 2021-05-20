@@ -21,7 +21,7 @@
 		<b>by {{ question.profile }} </b>
 	  </div>
 		<div class="question-body">
-		  <p class="question-content">{{ question.content }}</p>
+		  <p class="question-content">{{ question.content | safe }}</p>
 		</div>
 		  <small class="question-tags pt-2"><b>tags:{% for tag in tags %}
 				#{{ tag.tag_name }}
