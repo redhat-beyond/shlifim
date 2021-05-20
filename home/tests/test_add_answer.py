@@ -37,8 +37,6 @@ class TestAddAnswer:
 
     def test_default_params_answer(self, profile, question_test_data):
         answer = Answer(profile=profile, question=question_test_data, content='test')
-        assert answer.likes_count == 0
-        assert answer.dislikes_count == 0
         assert answer.is_edited is False
 
     def test_get_answers(self):
@@ -52,3 +50,15 @@ class TestAddAnswer:
     def test_post_answer_not_authenticated_user(self, client, question_test_data, comment_content):
         response = client.post(f'/explore/question_{question_test_data.id}/', data=comment_content)
         assert response.status_code == 401
+
+    def test_valid_tags_not_removed_from_answer(self, client, question_test_data, authenticated_user):
+        data = {'content': '<p>test</p>'}
+        client.post(f'/explore/question_{question_test_data.id}/', data=data)
+        answer = question_test_data.get_answers_feed().first()
+        assert "<p>" in answer.content
+
+    def test_invalid_tags_removed_from_question(self, client, question_test_data, authenticated_user):
+        data = {'content': '<script language = "javascript" > alert("You are PWNED!") </script>'}
+        client.post(f'/explore/question_{question_test_data.id}/', data=data)
+        answer = question_test_data.get_answers_feed().first()
+        assert "<script>" not in answer.content

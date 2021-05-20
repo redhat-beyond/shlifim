@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
 from .models import Question, Answer, Gender
-from ckeditor.fields import RichTextField
+from .RichTextBleachField import RichTextBleachField
 
 
 class QuestionForm(forms.ModelForm):
@@ -23,7 +23,7 @@ class SignUpForm(UserCreationForm):
 
 
 class CommentForm(forms.ModelForm):
-    content = RichTextField(blank=True, null=True)
+    content = RichTextBleachField(blank=True, null=True)
 
     class Meta:
         model = Answer
