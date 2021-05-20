@@ -12,6 +12,8 @@ pytest-django = "*"
 django = "*"
 pytest = "*"
 django-ckeditor = "*"
+django-bleach = "*"
+bleach = "*"
 
 [requires]
 python_version = "3.8"
