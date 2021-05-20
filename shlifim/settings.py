@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
+from django.contrib.messages import constants as messages
 
 from pathlib import Path
 
@@ -132,3 +133,7 @@ LOGOUT_REDIRECT_URL = '/'
 
 STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
+
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger'
+}

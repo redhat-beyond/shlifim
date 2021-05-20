@@ -140,24 +140,9 @@ class TestInsertQuestionFeature:
             ({'title': "Question in Math",
              'content': 'How much is it 1+1?', 'tags_': "", 'subject': 1}),
             # User entered all the required fields except grade
-            ({'title': "Question in Math", 'content': 'How much is it 1+1?',
-             'tags_': "", 'subject': 1, 'book_page': -23}),
-            # User entered all the required fields and a negative book page
-            ({'title': "Question in Math", 'content': 'How much is it 1+1?',
-             'tags_': "", 'subject': 1, 'book_page': 43343}),
-            # User entered all the required fields and to high book page
-            ({'title': "Question in Math", 'subject': 1, 'content': 'How much is it 1+1?',
-             'tags_': "aaaaaaaaaaaaaaaaaaaaaaaa", 'grade': Grade.GRADE7}),
-            # User entered all the required fields and invalid tags (more than 20 chars tag)
-            ({'title': "Question in Math", 'subject': 1, 'content': 'How much is it 1+1?',
-             'tags_': "a", 'grade': Grade.GRADE7}),
-            # User entered all the required fields and invalid tags (1 char tag)
-            ({'title': "Question in Math", 'subject': 1, 'content': 'How much is it 1+1?',
-             'tags_': "beyond_01, beyond_02, beyond_03, beyond_04, beyond_05, beoynd_06", 'grade': Grade.GRADE7}),
-            # User entered all the required fields and invalid tags (more than 5 tags)
         ])
         @pytest.mark.django_db
-        def test_post_invalid_question_with_client(self, client, invalid_data, authenticated_user):
+        def test_post_invalid_question_with_default_error_message(self, client, invalid_data, authenticated_user):
             response = client.post('/explore/new_question', data=invalid_data)
             assert response.status_code == 200
 
@@ -171,6 +156,42 @@ class TestInsertQuestionFeature:
 
             with pytest.raises(Question.DoesNotExist):
                 assert Question.objects.get(content='How much is it 1+1?')
+
+        @pytest.mark.parametrize("invalid_data, error_msg", [
+            (({'title': "Question in Math", 'content': 'How much is it 1+1?',
+             'tags_': "", 'subject': 1, 'book_page': -23}), 'Invalid data. Book number must be between 1-999.'),
+            # User entered all the required fields and a negative book page
+            (({'title': "Question in Math", 'content': 'How much is it 1+1?',
+             'tags_': "", 'subject': 1, 'book_page': 43343}), 'Invalid data. Book number must be between 1-999.'),
+            # User entered all the required fields and to high book page
+            (({'title': "Question in Math", 'subject': 1, 'content': 'How much is it 1+1?',
+             'tags_': "aaaaaaaaaaaaaaaaaaaaaaaa", 'grade': Grade.GRADE7}),
+             '''Invalid data.
+             You may enter up to 5 tags which are separated by ",".
+             Each tag must have between 2-20 characters.'''),
+            # User entered all the required fields and invalid tags (more than 20 chars tag)
+            (({'title': "Question in Math", 'subject': 1, 'content': 'How much is it 1+1?',
+             'tags_': "a", 'grade': Grade.GRADE7}),
+             '''Invalid data.
+             You may enter up to 5 tags which are separated by ",".
+             Each tag must have between 2-20 characters.'''),
+            # User entered all the required fields and invalid tags (1 char tag)
+            (({'title': "Question in Math", 'subject': 1, 'content': 'How much is it 1+1?',
+             'tags_': "beyond_01, beyond_02, beyond_03, beyond_04, beyond_05, beoynd_06", 'grade': Grade.GRADE7}),
+             '''Invalid data.
+             You may enter up to 5 tags which are separated by ",".
+             Each tag must have between 2-20 characters.'''),
+            # User entered all the required fields and invalid tags (more than 5 tags)
+        ])
+        @pytest.mark.django_db
+        def test_post_invalid_question_with_custom_err_msg(self, client, invalid_data, error_msg, authenticated_user):
+            response = client.post('/explore/new_question', data=invalid_data)
+            assert response.status_code == 200
+
+            messages = list(response.context['messages'])
+
+            assert len(messages) == 1
+            assert str(messages[0]) == error_msg
 
         @pytest.mark.django_db
         def test_question_form_and_template_displayed(self, client, authenticated_user):
