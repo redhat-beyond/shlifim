@@ -202,6 +202,15 @@ class Tag(models.Model):
     def tags_feed(cls, search=''):
         return cls.objects.filter(tag_name__contains=search).order_by('tag_name')
 
+    @classmethod
+    def check_tag_array(cls, tags_array):
+        if(len(tags_array) > 5):
+            return False
+        for tag in tags_array:
+            if(len(tag) < 2 or len(tag) > 20):
+                return False
+        return True
+
 
 class Question_Tag(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question_ID')

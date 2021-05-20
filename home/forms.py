@@ -5,9 +5,11 @@ from django.contrib.auth.models import User
 
 
 class QuestionForm(forms.ModelForm):
+    tags_ = forms.CharField(max_length=110, min_length=0, required=False)
+
     class Meta:
         model = Question
-        fields = ('title', 'subject', 'sub_subject', 'grade', 'book', 'book_page', 'content')
+        fields = ('title', 'subject', 'sub_subject', 'grade', 'book', 'book_page', 'tags_', 'content')
 
 
 class SignUpForm(UserCreationForm):
