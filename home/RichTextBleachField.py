@@ -5,7 +5,7 @@ ALLOWED_TAGS = set(bleach.ALLOWED_TAGS + [
     'a', 'blockquote', 'code', 'del', 'dd', 'dl', 'dt',
     'h1', 'h2', 'h3', 'h3', 'h4', 'h5', 'i', 'img', 'kbd',
     'li', 'ol', 'ul', 'p', 'pre', 's', 'sup', 'sub', 'em',
-    'strong', 'strike', 'ul', 'br', 'hr' ])
+    'strong', 'strike', 'ul', 'br', 'hr'])
 
 ALLOWED_STYLES = set(bleach.ALLOWED_STYLES + [
     'color', 'background-color', 'font', 'font-weight',
@@ -35,5 +35,6 @@ def bleach_clean(html):
 class RichTextBleachField(RichTextField):
     def __init__(self, *args, **kwargs):
         super(RichTextBleachField, self).__init__(*args, **kwargs)
+
     def to_python(self, value):
         return bleach_clean(value)
