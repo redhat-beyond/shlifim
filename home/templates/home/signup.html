@@ -1,0 +1,22 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/CSS/new_question_style.css' %}">
+<body class="main-bg">
+  <div class="row pb-3">
+     <div class="column" style="width:25%"></div>
+        <div class="column" style = "width:59%" >
+          <div class="msg">
+            <center><h2>Sign up</h2></center>
+            <br><br>
+            <form method="post">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <center><button class="submit-btn" type="submit">Sign up</button></center>
+            </form>
+        </div>
+      </div>
+    <div class="column"></div>
+  </div>
+</body>
+{% endblock %}

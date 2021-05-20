@@ -4,10 +4,6 @@ import pytest
 @pytest.mark.django_db
 class TestLogin:
     @pytest.fixture
-    def valid_user_details(self):
-        return {"username": "Lior", "password": "LiorLior"}
-
-    @pytest.fixture
     def invalid_user_details(self):
         return {"username": "Lior12", "password": "LiorLior"}
 

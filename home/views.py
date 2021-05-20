@@ -1,8 +1,9 @@
-from django.shortcuts import render, get_object_or_404, redirect
-from .models import Question, Tag
+from django.shortcuts import render, redirect, get_object_or_404
+from .models import Question, Tag, Profile
 from django.views.generic.list import ListView
-from .forms import QuestionForm
+from .forms import QuestionForm, SignUpForm
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth import login, authenticate
 
 
 def about(request):
@@ -49,7 +50,6 @@ def new_question(request):
 
 
 class QuestionsListView(ListView):
-
     model = Question
     template_name = 'home/explore.html'
     ordering = ['-publish_date']
@@ -70,3 +70,21 @@ class QuestionsListView(ListView):
 
         context.update(kwargs)
         return super().get_context_data(**context)
+
+
+def signup(request):
+    if request.method == 'POST':
+        form = SignUpForm(request.POST)
+        if form.is_valid():
+            user = form.save()
+            raw_password = form.cleaned_data.get('password1')
+            user.save()
+            profile = Profile(user=user)
+            user = authenticate(username=user.username, password=raw_password)
+            profile.gender = form.cleaned_data.get('gender')
+            profile.save()
+            login(request, user)
+            return redirect('/')
+    else:
+        form = SignUpForm()
+    return render(request, 'home/signup.html', {'form': form})
