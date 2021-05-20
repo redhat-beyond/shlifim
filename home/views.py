@@ -1,7 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .models import Question, Tag, Profile, Answer
 from django.views.generic.list import ListView
-from .forms import QuestionForm, SignUpForm
+from .forms import QuestionForm, SignUpForm, CommentForm
 from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
@@ -15,8 +15,9 @@ def landingpage(request):
     return render(request, 'home/landingpage.html')
 
 
-def displayQuestion(request, **kwargs):
-    question = get_object_or_404(Question, id=kwargs['pk'])
+def display_question_page(request, pk):
+    form = CommentForm(request.POST)
+    question = get_object_or_404(Question, id=pk)
     sort_answer_by = request.GET.get("sortanswersby", "")
     context = {
         "question": question,
@@ -24,8 +25,20 @@ def displayQuestion(request, **kwargs):
         "answersCount": question.answer_set.count(),
         "tags": question.tags.values(),
         "title": question.get_question_title(),
-        "is_user_logged_in": request.user.is_authenticated
+        "is_user_logged_in": request.user.is_authenticated,
+        "form": form
     }
+    if request.method == 'POST':
+        if form.is_valid():
+            if (request.profile is None):
+                return HttpResponse('Unauthorized', status=401)
+            else:
+                form.instance.profile = request.profile
+                form.instance.question = question
+                form.save()
+            return redirect(reverse("question-detail", kwargs={
+                'pk': question.pk
+            }))
     return render(request, 'home/question_detail.html', context)
 
 

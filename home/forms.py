@@ -1,7 +1,8 @@
 from django import forms
-from .models import Question, Gender
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
+from .models import Question, Answer, Gender
+from .RichTextBleachField import RichTextBleachField
 
 
 class QuestionForm(forms.ModelForm):
@@ -19,3 +20,11 @@ class SignUpForm(UserCreationForm):
     class Meta:
         model = User
         fields = ('username', 'first_name', 'last_name', 'email', 'gender', 'password1', 'password2', )
+
+
+class CommentForm(forms.ModelForm):
+    content = RichTextBleachField(blank=True, null=True)
+
+    class Meta:
+        model = Answer
+        fields = ('content',)
