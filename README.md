@@ -11,14 +11,16 @@ to their homework and assignments and also share summaries.
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/beyond-io/shlifim.svg)](https://github.com/beyond-io/shlifim/pulls)
 [![GitHub issues](https://img.shields.io/github/issues/beyond-io/shlifim.svg)](https://GitHub.com/beyond-io/shlifim/issues/)
 
-## Upcoming Features:
-* Register & Login 
+## Existing Features:
+* Register 
+* Log in & Log out
 * Post a question
 * Watch asked questions
 * Answer a question
-* Up/Down vote an answer
+* Sort answers
+* Like/Dislike an answer
 * Add tags to questions
-* Filter questions by topics / tags / most answered
+* Filter questions by tags
 
 ## Technology stack 
 * [Vagrant](https://www.vagrantup.com/) -  an open-source software product for building and maintaining portable virtual software development environments
