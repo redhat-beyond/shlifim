@@ -31,7 +31,10 @@
             </div>
             <div class="col-3">
                 <div class="row">
-                    <span>{{ question.subject }} ,{{ question.sub_subject }}</span>
+                    <span>{{ question.subject }}
+					{% if question.sub_subject != None %}
+					, {{ question.sub_subject }}
+					{% endif %} </span>
                 </div>
                 <div class="row mt-2">
                         <div >
