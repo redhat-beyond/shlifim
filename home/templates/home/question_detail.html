@@ -24,9 +24,12 @@
 		<div class="question-body">
 		  <p class="question-content">{{ question.content | safe }}</p>
 		</div>
-		  <small class="question-tags pt-2"><b>tags:{% for tag in tags %}
-				#{{ tag.tag_name }}
-			{% endfor %} </b></small>
+		 <div class="pt-2">
+				{% for tag in question.tag_set.all %}
+					<span class="badge badge-pill badge-secondary">#{{tag.tag_name}}</span>
+				{% endfor %}
+          </div>
+		  
 	</div>
  </div>
 
