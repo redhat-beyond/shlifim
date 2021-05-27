@@ -71,18 +71,18 @@ def tags(request):
 def new_question(request):
     form = QuestionForm
     if request.method == 'POST':
-        questForm = QuestionForm(request.POST)
-        if questForm.is_valid():
-            tags_array = [t.strip().lower() for t in questForm.cleaned_data['tags_'].split(',')]
+        question_form = QuestionForm(request.POST)
+        if question_form.is_valid():
+            tags_array = [t.strip().lower() for t in question_form.cleaned_data['tags_'].split(',')]
             tags_status = Tag.check_tag_array(tags_array)
-            if(not questForm.data['tags_'] or tags_status):
-                questForm = questForm.save(commit=False)
-                questForm.profile = request.profile
-                questForm.save()
+            if(not question_form.data['tags_'] or tags_status):
+                question_form = question_form.save(commit=False)
+                question_form.profile = request.profile
+                question_form.save()
                 if(tags_status):
-                    questionInstane = Question.objects.get(id=questForm.id)
+                    questionInstane = Question.objects.get(id=question_form.id)
                     questionInstane.add_tags_to_question(tags_array)
-                return redirect('question-detail', questForm.id)
+                return redirect('question-detail', question_form.id)
             else:
                 tags_error_msg = '''Invalid data.
              You may enter up to 5 tags which are separated by ",".

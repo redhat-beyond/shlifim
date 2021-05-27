@@ -17,7 +17,7 @@ class TestInsertQuestionFeature:
                             subject=Subject.objects.first(),
                             grade=Grade.GRADE7)
 
-        @pytest.mark.parametrize("valid_Input", [
+        @pytest.mark.parametrize("valid_input", [
             (10, 1, "Question in Math", 'How much is it 1+1?',
              datetime(2022, 4, 7, 12, 53, 29, 4, tzinfo=pytz.UTC), 1, 4, Grade.GRADE7, 1, 10, False),
             # User entered all the fields
@@ -35,13 +35,13 @@ class TestInsertQuestionFeature:
             # User entered all the fields except Book page
         ])
         @pytest.mark.django_db
-        def test_add_valid_question(self, valid_Input):
-            question = Question(*valid_Input)
+        def test_add_valid_question(self, valid_input):
+            question = Question(*valid_input)
             question.save()
 
             assert Question.objects.filter(pk=question.id).exists()
 
-        @pytest.mark.parametrize("invalid_Input, exception", [
+        @pytest.mark.parametrize("invalid_input, exception", [
             ((10, 3, None, 'How much is it 1+1?',
              datetime(2022, 4, 7, 12, 53, 29, 4, tzinfo=pytz.UTC), 1, 4, Grade.GRADE7, 1, 10, False), ValidationError),
             # User didn't enter title
@@ -63,10 +63,10 @@ class TestInsertQuestionFeature:
             # User entered to high book number
         ])
         @pytest.mark.django_db
-        def test_add_invalid_question(self, invalid_Input, exception):
+        def test_add_invalid_question(self, invalid_input, exception):
 
             with pytest.raises(exception):
-                assert Question(*invalid_Input).clean_fields()
+                assert Question(*invalid_input).clean_fields()
 
         @pytest.mark.django_db
         def test_default_is_edited_is_false(self, question):
