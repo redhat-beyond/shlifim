@@ -39,7 +39,7 @@ class TestExplorePage:
         @pytest.mark.django_db
         def test_new_question_btn_in_explore_page(self, explore_page_response):
             char_content = explore_page_response.content.decode(explore_page_response.charset)
-            assert '<a href="%s"' % reverse("new_question") in char_content
+            assert '<a href="%s"' % reverse("new-question") in char_content
 
     class TestTagsFilter:
 
