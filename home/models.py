@@ -117,15 +117,15 @@ class Question(models.Model):
                 new_pair.tag = tag
                 new_pair.save()
 
-    def get_answers_feed(self, filterType=''):
+    def get_answers_feed(self, filter_type=''):
         '''
         Get all the answers in the DB for that question
         Also get filter type param for chosing between date / likes count filter
         '''
         answers = self.answer_set
-        if filterType == 'date' or filterType == '':
+        if filter_type == 'date' or filter_type == '':
             answers = answers.order_by('-publish_date')
-        elif filterType == 'votes':
+        elif filter_type == 'votes':
             answers = answers.annotate(q_count=Count('likes')).order_by('-q_count')
         else:
             raise Http404()

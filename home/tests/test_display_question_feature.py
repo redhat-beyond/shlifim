@@ -22,14 +22,14 @@ class TestDisplayQuestionFeature:
             assert(prev_is_edited_val != answers[0].is_edited)
 
         @pytest.mark.django_db
-        @pytest.mark.parametrize(('filterType, expected'), [('date', 'Answer 2'), ('votes', 'Answer 1')])
-        def test_answers_feed(self, filterType, expected, answers):
+        @pytest.mark.parametrize(('filter_type, expected'), [('date', 'Answer 2'), ('votes', 'Answer 1')])
+        def test_answers_feed(self, filter_type, expected, answers):
             """
             Tests if get_answers_feed returns queryset of all the answers of
             question number 3 sorted by votes or answers
             """
             question = Question.objects.get(id=3)
-            answers_feed = question.get_answers_feed(filterType)
+            answers_feed = question.get_answers_feed(filter_type)
             assert isinstance(answers_feed, QuerySet)
             assert answers_feed[0].content == expected
 
@@ -67,7 +67,7 @@ class TestDisplayQuestionFeature:
             '''
             Testing if the context passed to the view contains the right contents
             '''
-            expectedPairs = [
+            expected_pairs = [
                 ('question', 'Question #14 : g forwards, it was even later than ( 28/04/2021 23:14 )'),
                 ('answers_tuples', '[(<Answer: Answer B>, False, False), ' +
                  '(<Answer: Answer A>, False, False), ' +
@@ -79,13 +79,13 @@ class TestDisplayQuestionFeature:
                  '{\'id\': 13, \'tag_name\': \'all_my_sons\'}]>'),
                 ('title', 'History-g forwards, it was even later than')
                 ]
-            for check, expected in expectedPairs:
+            for check, expected in expected_pairs:
                 assert str(response.context[check]) == expected
 
-        @pytest.mark.parametrize(('filterType, expected'), [('date', 'Answer B'), ('votes', 'Popular Answer')])
+        @pytest.mark.parametrize(('filter_type, expected'), [('date', 'Answer B'), ('votes', 'Popular Answer')])
         @pytest.mark.django_db
-        def test_sorting_answers(self, client, filterType, expected):
-            url = f'/explore/question_14/?sortanswersby={filterType}'
+        def test_sorting_answers(self, client, filter_type, expected):
+            url = f'/explore/question_14/?sortanswersby={filter_type}'
             response = client.get(url)
             answer = response.context['answers_tuples'][0][0]
             assert str(answer.content) == expected
