@@ -29,10 +29,8 @@
 					<span class="badge badge-pill badge-secondary">#{{tag.tag_name}}</span>
 				{% endfor %}
           </div>
-		  
 	</div>
  </div>
-
  <div class="col-md-8" id="answers">
 	  <a class="ans-counter"><b>{{ answersCount }} Answer{{ answersCount|pluralize:",s" }} </b></a>
 	<small class="ml-4"> Order answers by:<br></small>
@@ -40,53 +38,9 @@
 		<a href="{% url 'question-detail' question.pk  %}?sortanswersby=date&page#answers" class="ml-4 btn btn-primary">Publish Date</a>
 		<a href="{% url 'question-detail' question.pk  %}?sortanswersby=votes&page#answers" name="q" class="ml-4 btn btn-primary" value="votes">Votes Count</a>	
 	</form>
-	
  </div>
  <!-- Answers Part -->
- <article class="answers-container">
-{% for answer, liked, disliked in answers_tuples %}
-	<div class="answer-display mt-1 col-md-10",id="ans{{answer.id}}">
-	<div class="row">
-		<div class="asnwer-conent col-md-10">
-			<p>{{ answer.content | safe }}</p>
-			</div>
-		<div class="answer-meta-data right pl-4 col-md-2 container">
-		<div class="col-12">
-			<b>by {{ answer.profile }}</b>
-		</div>
-		<div class="col-12">
-			<small class="text-muted date">{{ answer.publish_date|date:"F d, Y" }}</small>
-		</div>
-		<div class="d-flex col-11 pt-3">
-        <div class="pr-2">
-			<a href="thumb/up/{{ answer.id }}"
-			{% if not is_user_logged_in %} class="disabled"{% endif %}>
-			{% if liked %} 
-			<i class="bi bi-hand-thumbs-up-fill"></i>
-			{% else %}
-			<i class="bi bi-hand-thumbs-up"></i>
-			{% endif %}
-			</a >
-			  {{ answer.likes.count }}
-			<a href="thumb/down/{{ answer.id }}"
-			  {% if not is_user_logged_in %}class="disabled"{% endif %}>
-			  {% if disliked %}
-				<i class="bi bi-hand-thumbs-down-fill"></i>
-				{% else %}
-				<i class="bi bi-hand-thumbs-down"></i>
-			{% endif %}
-			  </a>
-			  {{ answer.dislikes.count }}
-			  {% if not is_user_logged_in %}
-				<small><a href="{% url 'login' %}">Login</a> to like</small>
-			 {% endif %}
-        </div>
-		</div>
-		</div>
-	 </div>
-	</div>
-{% endfor %}
- </article>
+ {% include 'home/answers_display.html' %}
  </div>
  </div>  
  </main>
