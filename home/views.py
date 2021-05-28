@@ -87,9 +87,10 @@ def new_question(request):
                 tags_error_msg = '''Invalid data.
              You may enter up to 5 tags which are separated by ",".
              Each tag must have between 2-20 characters.'''
-                messages.error(request, tags_error_msg)
+                messages.error(request, {'title': 'ERROR:', 'message_content': tags_error_msg})
         else:
-            messages.error(request, 'Invalid data. Book number must be between 1-999.')
+            messages.error(request, {'title': 'ERROR:',
+                           'message_content': 'Invalid data. Book number must be between 1-999.'})
     return render(request, 'home/questions/new_question.html', {'form': form, 'title': 'New Question'})
 
 
