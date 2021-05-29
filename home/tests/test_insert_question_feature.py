@@ -191,7 +191,8 @@ class TestInsertQuestionFeature:
             messages = list(response.context['messages'])
 
             assert len(messages) == 1
-            assert str(messages[0]) == error_msg
+            assert str(messages[0].message['message_content']) == error_msg
+            assert str(messages[0].message['title']) == "ERROR:"
 
         @pytest.mark.django_db
         def test_question_form_and_template_displayed(self, client, authenticated_user):
