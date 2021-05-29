@@ -44,6 +44,10 @@ class Profile(models.Model):
         profile.save()
         return profile
 
+    @classmethod
+    def profiles_feed(cls):
+        return cls.objects.all()
+
 
 class Subject(models.Model):
     subject_name = models.CharField(max_length=100, unique=True)
@@ -137,6 +141,10 @@ class Question(models.Model):
     def get_answers_num(self):
         return self.answer_set.count()
 
+    @classmethod
+    def get_all_user_questions(cls, profile):
+        return cls.objects.all().filter(profile=profile)
+
 
 class Answer(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
@@ -197,6 +205,10 @@ class Answer(models.Model):
     @classmethod
     def get_answers_by_date(cls):
         return cls.objects.order_by('-publish_date')
+
+    @classmethod
+    def get_all_user_answers(cls, profile):
+        return cls.objects.all().filter(profile=profile)
 
 
 class Tag(models.Model):
