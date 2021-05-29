@@ -26,7 +26,9 @@
 		</div>
 		 <div class="pt-2">
 				{% for tag in question.tag_set.all %}
-					<span class="badge badge-pill badge-secondary">#{{tag.tag_name}}</span>
+				   <span class="badge badge-pill badge-secondary">
+							 <a href="{% url 'explore-page' %}?tag={{ tag }}" class="nostyle">
+							#{{tag.tag_name}}</a></span>
 				{% endfor %}
           </div>
 	</div>
