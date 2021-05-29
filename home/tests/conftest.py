@@ -3,7 +3,6 @@ import pytz
 from home.models import Profile, Subject, Question, Answer
 from django.contrib.auth.models import User
 from django.utils import timezone
-from django.contrib.auth import authenticate
 from datetime import datetime
 
 
@@ -37,10 +36,8 @@ def profile():
 
 @pytest.fixture
 def authenticated_user(client, request):
-    username = 'Lior'
-    password = 'LiorLior'
-    client.login(username=username, password=password)
-    user = authenticate(request, username=username, password=password)
+    user = User.objects.get(username='Lior')
+    client.force_login(user)
     return user
 
 

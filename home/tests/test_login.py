@@ -1,4 +1,5 @@
 import pytest
+from django.contrib.auth.models import User
 
 
 @pytest.mark.django_db
@@ -33,7 +34,8 @@ class TestLogin:
         assert "Please enter a correct username and password" in str(response.content)
 
     def test_authenticated_user_view(self, client, valid_user_details):
-        client.login(username=valid_user_details['username'], password=valid_user_details['password'])
+        user = User.objects.get(username=valid_user_details['username'])
+        client.force_login(user)
         response = client.get('/')
         assert "Login" not in str(response.content)
         assert "Logout" in str(response.content)
