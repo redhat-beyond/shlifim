@@ -51,3 +51,15 @@ a.nostyle:visited {
     text-decoration: inherit;
     color: inherit;
 }
+
+.profile-name {
+	text-decoration: none;
+	font-weight: bold;
+ 	color: black;
+}
+
+.profile-name:hover {
+	text-decoration: none;
+	font-weight: bold;
+ 	color: blue;
+}

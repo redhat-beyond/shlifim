@@ -55,7 +55,8 @@
                 </span>
             </div>
             <div class="col">
-                <p>by <b>{{ question.profile }}</b></p>
+                	<b>by <a href="{% url 'user-page' question.profile.pk  %}">{{ question.profile }}</a></b>
+					<br/>
                 <small class="text-muted date">{{ question.publish_date|date:"d F, Y" }}</small>
             </div>
 	 </div>

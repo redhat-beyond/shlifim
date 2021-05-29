@@ -1,0 +1,23 @@
+.column {
+  float: left;
+  width: 50%;
+  background-color:white;
+  padding:30px;
+  border-bottom-width:15px;
+}
+.left-col{
+	background-color:#f2dccb;
+}
+.right-col{
+	background-color:#f2dccb;
+}
+.title{
+	text-align:center;
+	padding:10px;
+}
+/* Clear floats after the columns */
+.row:after {
+  content: "";
+  display: table;
+  clear: both;
+}

@@ -1,0 +1,30 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/CSS/user_page.css' %}">
+<body class="main-bg">
+<main role="main" class="container">
+ <h1 class="title">{{  profile.user.username }} Profile page</h1>
+ <p> Date joined: {{ profile.user.date_joined | date:"Y-F-d" }}</p>
+ <p> Gender: {{ profile.gender }}</p>
+ <p> Number of Questions: {{ user_questions.count }}</p>
+ <p> Number of Answers: {{ user_answers.count }}</p>
+<div class="row">
+  <div class="column left-col border border-dark" >
+   <h2>User Questions</h2>
+   {% for question in user_questions %}
+		<a class="questions" href="{% url 'question-detail' question.pk  %}">{{question}}</a>
+		<br/>
+	{% endfor %}
+  </div>
+  <div class="column right-col border border-dark">
+  <h2>User Answers</h2>
+  {% for answer in user_answers %}
+		<a class="answers" href="{% url 'question-detail' answer.question.pk  %}">Answered {{answer.question}}</a>
+		<br/>
+	{% endfor %}
+  </div>
+</div>
+</main>
+</body>
+{% endblock content %}

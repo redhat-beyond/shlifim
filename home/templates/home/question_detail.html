@@ -19,7 +19,7 @@
 		{% if question.is_edited %}
 			<small class="text-muted date ml-3"><span>*edited*</span></small>
 			{% endif %}
-		<b>by {{ question.profile }} </b>
+		<b>by <a href="{% url 'user-page' question.profile.pk  %}">{{ question.profile }}</a> </b>
 	  </div>
 		<div class="question-body">
 		  <p class="question-content">{{ question.content | safe }}</p>

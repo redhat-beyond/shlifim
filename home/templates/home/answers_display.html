@@ -7,7 +7,7 @@
 			</div>
 		<div class="answer-meta-data right pl-4 col-md-2 container">
 		<div class="col-12">
-			<b>by {{ answer.profile }}</b>
+			<b>by <a href="{% url 'user-page' answer.profile.pk  %}">{{ answer.profile }}<a> </b>
 		</div>
 		<div class="col-12">
 			<small class="text-muted date">{{ answer.publish_date|date:"F d, Y" }}</small>
