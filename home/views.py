@@ -1,11 +1,13 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
 from .models import Question, Tag, Profile, Answer
 from django.views.generic.list import ListView
+from django.views.generic import DeleteView
 from .forms import QuestionForm, SignUpForm, CommentForm
 from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, authenticate
 from django.contrib import messages
+from django.urls import reverse_lazy
 
 
 def about(request):
@@ -150,3 +152,18 @@ def user_page(request, pk):
         'user_answers': users_answers,
     }
     return render(request, 'home/user_page.html', context)
+
+
+class DeleteQuestionView(DeleteView):
+    model = Question
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        if self.object.profile == request.profile:
+            messages.success(request, 'SUCCESS: Your question has been deleted.')
+            return super(DeleteQuestionView, self).delete(request, *args, **kwargs)
+        else:
+            return HttpResponse('Unauthorized', status=401)
+
+    def get_success_url(self):
+        return reverse_lazy('explore-page')
