@@ -67,6 +67,11 @@ def tags(request):
     return render(request, 'home/tags.html', {'tags': tags})
 
 
+def users(request):
+    profiles = Profile.profiles_feed()
+    return render(request, 'home/users.html', {'profiles': profiles})
+
+
 @login_required(login_url='/login/')
 def new_question(request):
     form = QuestionForm
@@ -133,3 +138,15 @@ def signup(request):
     else:
         form = SignUpForm()
     return render(request, 'home/signup.html', {'form': form})
+
+
+def user_page(request, pk):
+    profile = get_object_or_404(Profile, pk=pk)
+    users_questions = Question.get_all_user_questions(profile)
+    users_answers = Answer.get_all_user_answers(profile)
+    context = {
+        'profile': profile,
+        'user_questions': users_questions,
+        'user_answers': users_answers,
+    }
+    return render(request, 'home/user_page.html', context)

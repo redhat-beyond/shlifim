@@ -1,0 +1,32 @@
+{% extends "home/base.html" %}
+{% load static %}
+{% block content %}
+<link rel="stylesheet" type="text/css" href="{% static 'home/CSS/tags_style.css' %}">
+<html>
+    <body>
+        <main role="main" class="container">
+        <div class="row">
+            <div class="col-md-12">
+            <br><br>
+            <center><h1>Profiles</h1></center>
+            <br><br>
+            <div class="tags-grid">
+                <div class="wrapper">
+                    {% for profile in profiles %}
+
+                      <div class="card border-secondary mb-3">
+                            <div class="card-body">
+                                <p class="card-text tag-text">
+                                    <a href="{% url 'user-page' profile.pk%}">{{ profile }}</a>
+                                </p>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+            </div>
+        </div>
+    </body>
+   
+</html>
+{% endblock content %}
