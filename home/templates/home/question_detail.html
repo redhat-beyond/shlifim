@@ -13,6 +13,12 @@
 		<img class="rounded-circle question-img" 
 		src="{% get_static_prefix %}home\subjects-images\{{question.subject|lower}}.png">
 		<h3> {{ question.title }} </h3>
+		{% if question.profile.user == user %}
+		<form method="POST" action="{% url 'question-delete' question.pk %}" class="delete">
+		{% csrf_token %}
+		<input type="submit" class="delete right" value="Delete" onclick="return confirm('Are you sure?');">
+		</form>
+		{% endif %}
 	  </div>
 	  <div class="question-metadata">
 		<small class="text-muted date">{{ question.publish_date|date:"F d, Y" }}</small>
