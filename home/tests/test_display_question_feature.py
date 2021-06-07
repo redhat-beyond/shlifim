@@ -10,9 +10,9 @@ INVALID_ANSWER_ID = 999999
 TEST_QUESTION_ID = 14
 
 
+@pytest.mark.django_db
 class TestDisplayQuestionFeature:
     class TestAnswersManipulations:
-        @pytest.mark.django_db
         def test_set_is_edited(self, answers):
             """
             Tests functionality of set_is_edited
@@ -36,7 +36,6 @@ class TestDisplayQuestionFeature:
             assert answers_feed[0].content == expected
 
     class TestQuestionRelatedMethods:
-        @pytest.mark.django_db
         def test_get_question_title(self):
             """
             get_question_title(question_id) returns a string for question
@@ -46,25 +45,21 @@ class TestDisplayQuestionFeature:
             assert question.get_question_title() == "Math-question from math course"
 
     class TestHTMLRelated:
-        @pytest.mark.django_db
         @pytest.fixture
         def response(self, client):
             url = reverse("question-detail", args=[14])
             response = client.get(url)
             return response
 
-        @pytest.mark.django_db
         def test_display_question_page_url(self, response):
             """
             This test checks the returned status for routing to display-question feature
             """
             assert response.status_code == 200
 
-        @pytest.mark.django_db
         def test_template_name(self, response):
             assert response.templates[0].name == "home/question_detail.html"
 
-        @pytest.mark.django_db
         def test_response_context(self, response):
             """
             Testing if the context passed to the view contains the right contents
@@ -97,27 +92,25 @@ class TestDisplayQuestionFeature:
             ("filter_type, expected"),
             [("date", "Answer B"), ("votes", "Popular Answer")],
         )
-        @pytest.mark.django_db
         def test_sorting_answers(self, client, filter_type, expected):
-            url = f"/explore/question_14/?sortanswersby={filter_type}"
-            response = client.get(url)
+            url = reverse("question-detail", args=[14])
+            query_params = f"?sortanswersby={filter_type}"
+            response = client.get(url + query_params)
             answer = response.context["answers_tuples"][0][0]
             assert str(answer.content) == expected
 
-        @pytest.mark.django_db
         def test_invalid_question_url(self, client):
             url = reverse("question-detail", args=[Question.objects.count() + 1])
             response = client.get(url)
             assert response.status_code == 404
 
-        @pytest.mark.django_db
         def test_invalid_answersort_url(self, client):
-            url = "/explore/question_1/?sortanswersby=BAD"
-            response = client.get(url)
+            url = reverse("question-detail", args=[1])
+            query_params = "?sortanswersby=BAD"
+            response = client.get(url + query_params)
             assert response.status_code == 404
 
     class TestThumbsRouting:
-        @pytest.mark.django_db
         def test_logged_user_good_route(self, logged_client):
             response = logged_client.get(
                 f"/explore/question_{TEST_QUESTION_ID}/thumb/up/{DISLIKED_ANSWER_ID}"
@@ -134,12 +127,10 @@ class TestDisplayQuestionFeature:
                 (f"/explore/question_{TEST_QUESTION_ID}/thumb/up/{INVALID_ANSWER_ID}"),
             ],
         )
-        @pytest.mark.django_db
         def test_logged_user_bad_route(self, logged_client, bad_url):
             response = logged_client.get(bad_url)
             assert response.status_code == 404
 
-        @pytest.mark.django_db
         def test_unauthorized_response(self, client):
             response = client.get(f"/explore/question_{TEST_QUESTION_ID}/thumb/up/9")
             assert response.status_code == 401
@@ -154,7 +145,6 @@ class TestDisplayQuestionFeature:
                 (LIKED_ANSWER_ID, "down", False, True),
             ],
         )
-        @pytest.mark.django_db
         def test_thumbs_view(
             self, logged_client, answer_id, thumb_type, like_val, false_val
         ):
@@ -167,7 +157,6 @@ class TestDisplayQuestionFeature:
                 if answer.id == answer_id:
                     assert like == like_val and dislike == false_val
 
-        @pytest.mark.django_db
         def test_like_dislike_fields_update(self, answers, logged_client):
             answer_id1 = answers[0].id
             answer_id2 = answers[1].id

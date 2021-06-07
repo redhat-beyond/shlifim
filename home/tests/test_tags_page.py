@@ -4,16 +4,14 @@ from pytest_django.asserts import assertTemplateUsed
 from django.db.models.query import QuerySet
 
 
+@pytest.mark.django_db
 class TestTagsPage:
-    @pytest.mark.django_db
     def test_tags_page_url(self, tags_response):
         assert tags_response.status_code == 200
 
-    @pytest.mark.django_db
     def test_tags_page_return_type(self, tags_response):
         assert isinstance(tags_response.context["tags"], QuerySet)
 
-    @pytest.mark.django_db
     def test_tags_page_template(self, tags_response):
         assertTemplateUsed(tags_response, "home/tags.html")
 
@@ -23,7 +21,6 @@ class TestTagsPage:
         response = client.get(url)
         return response
 
-    @pytest.mark.django_db
     @pytest.mark.parametrize(
         ("search, included"),
         [
@@ -45,7 +42,6 @@ class TestTagsPage:
             "5th_Grade",
         ],
     )
-    @pytest.mark.django_db
     def test_tags_link(self, tags_response, tag_name):
         char_content = str(tags_response.content)
         requested_link = "/explore/?tag=" + tag_name

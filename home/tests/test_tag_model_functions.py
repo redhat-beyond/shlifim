@@ -2,6 +2,7 @@ import pytest
 from home.models import Tag
 
 
+@pytest.mark.django_db
 class TestTagModelFunctions:
     @pytest.mark.parametrize(
         "valid_tags",
@@ -14,7 +15,6 @@ class TestTagModelFunctions:
             (["beyond_01", "beyond_02", "beyond_03", "beyond_04", "beyond_05"]),
         ],
     )
-    @pytest.mark.django_db
     def test_check_tag_array_valid_data(self, valid_tags):
         assert Tag.check_tag_array(valid_tags) is True
 
@@ -35,28 +35,22 @@ class TestTagModelFunctions:
             ),
         ],
     )
-    @pytest.mark.django_db
     def test_check_tag_array_invalid_data(self, invalid_tags):
         assert Tag.check_tag_array(invalid_tags) is False
 
-    @pytest.mark.django_db
     def test_tags_feed_no_parameters(self):
         assert Tag.tags_feed().count() == 20
 
-    @pytest.mark.django_db
     def test_tags_feed_with_test_tag(self, tag_test_data):
         assert tag_test_data.tags_feed().count() == 21
 
-    @pytest.mark.django_db
     def test_tags_feed_with_filter(self, tag_test_data):
         assert Tag.tags_feed("_t").count() == 1
 
-    @pytest.mark.django_db
     def test_tags_feed_after_delete(self, tag_test_data):
         Tag.objects.filter(tag_name="test_tag_1").delete()
         assert Tag.tags_feed().count() == 20
 
-    @pytest.mark.django_db
     def test_tags_feed_no_result(self):
         assert Tag.tags_feed("testtesttesttest").count() == 0
 

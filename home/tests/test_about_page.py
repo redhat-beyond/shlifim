@@ -2,8 +2,8 @@ import pytest
 from django.urls import reverse
 
 
+@pytest.mark.django_db
 class TestAboutPage:
-    @pytest.mark.django_db
     @pytest.fixture
     def about_page_response(self, client):
         url = reverse("about")
@@ -13,7 +13,6 @@ class TestAboutPage:
     def test_about_page_url(self, about_page_response):
         assert about_page_response.status_code == 200
 
-    @pytest.mark.django_db
     @pytest.mark.parametrize(
         ("link"),
         [

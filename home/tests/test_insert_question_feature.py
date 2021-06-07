@@ -5,8 +5,10 @@ from pytest_django.asserts import assertTemplateUsed
 from home.forms import QuestionForm
 from datetime import datetime
 from django.core.exceptions import ValidationError
+from django.urls import reverse
 
 
+@pytest.mark.django_db
 class TestInsertQuestionFeature:
     class TestDatabaseInsertions:
         @pytest.fixture
@@ -94,7 +96,6 @@ class TestInsertQuestionFeature:
                 # User entered all the fields except Book page
             ],
         )
-        @pytest.mark.django_db
         def test_add_valid_question(self, valid_input):
             question = Question(*valid_input)
             question.save()
@@ -208,33 +209,30 @@ class TestInsertQuestionFeature:
                 # User entered to high book number
             ],
         )
-        @pytest.mark.django_db
         def test_add_invalid_question(self, invalid_input, exception):
 
             with pytest.raises(exception):
                 assert Question(*invalid_input).clean_fields()
 
-        @pytest.mark.django_db
         def test_default_is_edited_is_false(self, question):
 
             assert question.is_edited is False
 
-        @pytest.mark.django_db
         def test_default_book_page_is_none(self, question):
 
             assert question.book_page is None
 
-        @pytest.mark.django_db
         def test_default_book_is_none(self, question):
 
             assert question.book is None
 
-        @pytest.mark.django_db
         def test_default_sub_subject_is_none(self, question):
 
             assert question.sub_subject is None
 
     class TestViews:
+        new_question_url = reverse("new-question")
+
         @pytest.mark.parametrize(
             "valid_data",
             [
@@ -334,18 +332,17 @@ class TestInsertQuestionFeature:
                 # User entered all the required fields and a valid book page
             ],
         )
-        @pytest.mark.django_db
         def test_post_valid_question_with_client(
             self, client, valid_data, authenticated_user
         ):
             with pytest.raises(Question.DoesNotExist):
                 assert Question.objects.get(title=valid_data["title"])
 
-            response = client.post("/explore/new_question", data=valid_data)
+            response = client.post(self.new_question_url, data=valid_data)
             assert Question.objects.filter(title=valid_data["title"]).exists()
             assert response.status_code == 302
             question_id = Question.objects.get(title=valid_data["title"]).id
-            assert response.url == "/explore/question_" + str(question_id) + "/"
+            assert response.url == reverse("question-detail", args=[question_id])
 
         @pytest.mark.parametrize(
             "invalid_data",
@@ -370,22 +367,20 @@ class TestInsertQuestionFeature:
                 # User entered all the required fields except grade
             ],
         )
-        @pytest.mark.django_db
         def test_post_invalid_question_with_default_error_message(
             self, client, invalid_data, authenticated_user
         ):
-            response = client.post("/explore/new_question", data=invalid_data)
+            response = client.post(self.new_question_url, data=invalid_data)
             assert response.status_code == 200
 
             with pytest.raises(Question.DoesNotExist):
                 assert Question.objects.get(title=invalid_data["title"])
 
-        @pytest.mark.django_db
         def test_post_question_without_title_with_client(
             self, client, authenticated_user
         ):
             client.post(
-                "/explore/new_question",
+                self.new_question_url,
                 data={
                     "content": "How much is it 1+1?",
                     "subject": 1,
@@ -472,11 +467,10 @@ class TestInsertQuestionFeature:
                 # User entered all the required fields and invalid tags (more than 5 tags)
             ],
         )
-        @pytest.mark.django_db
         def test_post_invalid_question_with_custom_err_msg(
             self, client, invalid_data, error_msg, authenticated_user
         ):
-            response = client.post("/explore/new_question", data=invalid_data)
+            response = client.post(self.new_question_url, data=invalid_data)
             assert response.status_code == 200
 
             messages = list(response.context["messages"])
@@ -485,21 +479,19 @@ class TestInsertQuestionFeature:
             assert str(messages[0].message["message_content"]) == error_msg
             assert str(messages[0].message["title"]) == "ERROR:"
 
-        @pytest.mark.django_db
         def test_question_form_and_template_displayed(self, client, authenticated_user):
-            response = client.get("/explore/new_question")
+            response = client.get(self.new_question_url)
 
             assert response.status_code == 200
             assert isinstance(response.context["form"], type(QuestionForm))
             assertTemplateUsed(response, "home/questions/new_question.html")
 
         def test_redirection_user_logged_out(self, client):
-            response = client.get("/explore/new_question")
+            response = client.get(self.new_question_url)
 
             assert response.status_code == 302
             assert response.url == "/login/?next=/explore/new_question"
 
-        @pytest.mark.django_db
         def test_valid_tags_not_removed_from_question(self, client, authenticated_user):
             data = {
                 "title": "Question in Math",
@@ -508,11 +500,10 @@ class TestInsertQuestionFeature:
                 "grade": Grade.GRADE7,
                 "tags_": "",
             }
-            client.post("/explore/new_question", data=data)
+            client.post(self.new_question_url, data=data)
             question = Question.objects.filter(title=data["title"]).first()
             assert "<p>" in question.content
 
-        @pytest.mark.django_db
         def test_invalid_tags_removed_from_question(self, client, authenticated_user):
             data = {
                 "title": "Question in Math",
@@ -521,6 +512,6 @@ class TestInsertQuestionFeature:
                 "grade": Grade.GRADE7,
                 "tags_": "",
             }
-            client.post("/explore/new_question", data=data)
+            client.post(self.new_question_url, data=data)
             question = Question.objects.filter(title=data["title"]).first()
             assert "<script>" not in question.content

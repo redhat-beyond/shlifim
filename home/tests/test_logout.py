@@ -1,26 +1,30 @@
 import pytest
+from django.urls import reverse
 
 
 @pytest.mark.django_db
 class TestLogout:
+    landing_page_url = reverse("landing-page")
+    logout_url = reverse("logout")
+
     def test_status_code(self, client):
-        response = client.get("/logout/")
+        response = client.get(self.logout_url)
         assert response.status_code == 302  # redirected
 
     def test_redirection_default_url(self, client):
-        response = client.get("/logout/")
-        assert response.url == "/"  # redirected to home page.
+        response = client.get(self.logout_url)
+        assert response.url == self.landing_page_url  # redirected to home page.
 
     def test_logout(self, client, authenticated_user):
-        response = client.get("/")
+        response = client.get(self.landing_page_url)
         assert response.wsgi_request.user.is_authenticated  # successfully logged in
-        response = client.get("/logout/")
+        response = client.get(self.logout_url)
         assert (
             not response.wsgi_request.user.is_authenticated
         )  # successfully logged out
 
     def test_unauthenticated_user_view(self, client):
-        response = client.get("/")
+        response = client.get(self.landing_page_url)
         assert "Login" in str(response.content)
         assert "Logout" not in str(response.content)
 
