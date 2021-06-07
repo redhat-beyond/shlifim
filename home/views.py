@@ -36,9 +36,10 @@ def display_question_page(request, pk):
             if (request.profile is None):
                 return HttpResponse('Unauthorized', status=401)
             else:
-                form.instance.profile = request.profile
-                form.instance.question = question
-                form.save()
+                if form.cleaned_data['content'] != "":
+                    form.instance.profile = request.profile
+                    form.instance.question = question
+                    form.save()
             return redirect(reverse("question-detail", kwargs={
                 'pk': question.pk
             }))
