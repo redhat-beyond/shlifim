@@ -1,4 +1,5 @@
 from home.models import Answer
+from django.urls import reverse
 import pytest
 
 
@@ -8,11 +9,21 @@ class TestAddAnswer:
     def comment_content(self):
         return {'content': 'test'}
 
+    @pytest.fixture
+    def comment_no_content(self):
+        return {'content': ''}
+
     def test_post_redirect(self, client, question_test_data, authenticated_user, comment_content):
         response = client.post(f'/explore/question_{question_test_data.id}/', data=comment_content)
         assert (response.status_code == 302)  # check that redirect
         # redirect back to the same display question page
         assert (response.url == f'/explore/question_{question_test_data.id}/')
+
+    def test_post_answer_no_content(self, client, authenticated_user, question_test_data, comment_no_content):
+        url = reverse('question-detail', args=[question_test_data.id])
+        client.post(url, data=comment_no_content)
+        answers_feed = question_test_data.get_answers_feed()
+        assert answers_feed.count() == 0
 
     def test_add_answer_post(self, authenticated_user, client, question_test_data, comment_content):
         client.post(f'/explore/question_{question_test_data.id}/', data=comment_content)
