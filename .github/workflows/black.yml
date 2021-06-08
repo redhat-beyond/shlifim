@@ -1,0 +1,17 @@
+name: Black
+
+on: [push, pull_request]
+
+jobs: 
+  Black:
+    runs-on: ubuntu-latest
+    container: fedora:32
+    steps:
+      - name: Install Pipenv and Git
+        run: dnf install -y pipenv git 
+      - name: Checkout code
+        uses: actions/checkout@v2
+      - name: Setup environment
+        run: pipenv sync --dev 
+      - name: Run Black
+        run: pipenv run black . --check --skip-string-normalization
