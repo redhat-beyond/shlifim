@@ -1,5 +1,14 @@
 from django.contrib import admin
-from .models import Profile, Subject, Sub_Subject, Book, Question, Answer, Tag, Question_Tag
+from .models import (
+    Profile,
+    Subject,
+    Sub_Subject,
+    Book,
+    Question,
+    Answer,
+    Tag,
+    Question_Tag,
+)
 
 
 class BookAdmin(admin.ModelAdmin):

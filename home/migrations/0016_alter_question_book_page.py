@@ -7,16 +7,20 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0015_add_answers_test_data'),
+        ("home", "0015_add_answers_test_data"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='question',
-            name='book_page',
-            field=models.IntegerField(blank=True,
-                                      null=True,
-                                      validators=[django.core.validators.MinValueValidator(1),
-                                                  django.core.validators.MaxValueValidator(999)]),
+            model_name="question",
+            name="book_page",
+            field=models.IntegerField(
+                blank=True,
+                null=True,
+                validators=[
+                    django.core.validators.MinValueValidator(1),
+                    django.core.validators.MaxValueValidator(999),
+                ],
+            ),
         ),
     ]

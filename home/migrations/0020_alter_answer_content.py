@@ -7,13 +7,13 @@ import home.RichTextBleachField
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0019_alter_question_content'),
+        ("home", "0019_alter_question_content"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='answer',
-            name='content',
+            model_name="answer",
+            name="content",
             field=home.RichTextBleachField.RichTextBleachField(blank=True, null=True),
         ),
     ]

@@ -8,22 +8,54 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0006_test_data_question'),
+        ("home", "0006_test_data_question"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Answer',
+            name="Answer",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('content', models.TextField()),
-                ('publish_date', models.DateTimeField(default=django.utils.timezone.now)),
-                ('likes', models.ManyToManyField(blank=True, related_name='user_answer_likes', to='home.Profile')),
-                ('dislikes', models.ManyToManyField(blank=True, related_name='user_answer_dislikes',
-                                                    to='home.Profile')),
-                ('is_edited', models.BooleanField(default=False)),
-                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.profile')),
-                ('question', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.question')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("content", models.TextField()),
+                (
+                    "publish_date",
+                    models.DateTimeField(default=django.utils.timezone.now),
+                ),
+                (
+                    "likes",
+                    models.ManyToManyField(
+                        blank=True, related_name="user_answer_likes", to="home.Profile"
+                    ),
+                ),
+                (
+                    "dislikes",
+                    models.ManyToManyField(
+                        blank=True,
+                        related_name="user_answer_dislikes",
+                        to="home.Profile",
+                    ),
+                ),
+                ("is_edited", models.BooleanField(default=False)),
+                (
+                    "profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="home.profile"
+                    ),
+                ),
+                (
+                    "question",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="home.question"
+                    ),
+                ),
             ],
         ),
     ]

@@ -11,36 +11,42 @@ class TestTagsPage:
 
     @pytest.mark.django_db
     def test_tags_page_return_type(self, tags_response):
-        assert isinstance(tags_response.context['tags'], QuerySet)
+        assert isinstance(tags_response.context["tags"], QuerySet)
 
     @pytest.mark.django_db
     def test_tags_page_template(self, tags_response):
-        assertTemplateUsed(tags_response, 'home/tags.html')
+        assertTemplateUsed(tags_response, "home/tags.html")
 
     @pytest.fixture
     def tags_response(self, client):
-        url = reverse('tags')
+        url = reverse("tags")
         response = client.get(url)
         return response
 
     @pytest.mark.django_db
-    @pytest.mark.parametrize(('search, included'), [
-        ('a', '<Tag: Bagrut_Exam>'),
-        ('5', '<Tag: 5th_Grade>'),
-        ('abc', '[]'),
-        ('Pit', '<Tag: Pitagoras>'),
-        ])
+    @pytest.mark.parametrize(
+        ("search, included"),
+        [
+            ("a", "<Tag: Bagrut_Exam>"),
+            ("5", "<Tag: 5th_Grade>"),
+            ("abc", "[]"),
+            ("Pit", "<Tag: Pitagoras>"),
+        ],
+    )
     def test_tags_page_with_search(self, client, search, included):
-        response = client.get('/tags/?q=' + search)
+        response = client.get("/tags/?q=" + search)
         assert response.status_code == 200
-        assert included in str(response.context['tags'])
+        assert included in str(response.context["tags"])
 
-    @pytest.mark.parametrize('tag_name', [
-        "Bagrut_Exam",
-        "5th_Grade",
-    ])
+    @pytest.mark.parametrize(
+        "tag_name",
+        [
+            "Bagrut_Exam",
+            "5th_Grade",
+        ],
+    )
     @pytest.mark.django_db
     def test_tags_link(self, tags_response, tag_name):
         char_content = str(tags_response.content)
-        requested_link = "/explore/?tag="+tag_name
+        requested_link = "/explore/?tag=" + tag_name
         assert requested_link in char_content

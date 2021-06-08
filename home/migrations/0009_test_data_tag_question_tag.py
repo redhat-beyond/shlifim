@@ -2,23 +2,17 @@ from django.db import migrations, transaction
 
 
 class Migration(migrations.Migration):
-    dependencies = [
-        ('home', '0008_question_tag')
-    ]
+    dependencies = [("home", "0008_question_tag")]
 
     def generate_data(apps, schema_editor):
         from home.models import Tag, Question_Tag, Question
-        tag_test_data = [
-            ('Pitagoras'),
-            ('5th_Grade'),
-            ('Bagrut_Exam'),
-            ('Hebrew')
-        ]
+
+        tag_test_data = [("Pitagoras"), ("5th_Grade"), ("Bagrut_Exam"), ("Hebrew")]
         question_tag_test_data = [
-            ('Question from  Benny Goren Book', 'Pitagoras'),
-            ('Question from  Benny Goren Book', 'Bagrut_Exam'),
-            ('question about ants', '5th_Grade'),
-            ('Need help', 'Hebrew')
+            ("Question from  Benny Goren Book", "Pitagoras"),
+            ("Question from  Benny Goren Book", "Bagrut_Exam"),
+            ("question about ants", "5th_Grade"),
+            ("Need help", "Hebrew"),
         ]
 
         with transaction.atomic():

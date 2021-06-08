@@ -9,13 +9,13 @@ from django.db.models import Count
 
 
 class Gender(models.TextChoices):
-    MALE = 'M', 'Male'
-    FEMALE = 'F', 'Female'
-    UNSPECIFIED = 'U', 'Unspecified'
+    MALE = "M", "Male"
+    FEMALE = "F", "Female"
+    UNSPECIFIED = "U", "Unspecified"
 
 
 class Profile(models.Model):
-    '''
+    """
     Profile will be used as the base user in the Shlifim website.
     Profile is an extention to the imported 'User' from 'django.contrib.auth.models'.
     Imported Fields:
@@ -29,17 +29,24 @@ class Profile(models.Model):
     Added Fields:
     gender - Default gender is set to 'Unspecified', A user can choose to specifie its gender to Male/Female.
     is blocked - Boolean. Designates that this user won't be able to login until an admin unblockes him.
-    '''
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True)
-    gender = models.CharField(max_length=1, choices=Gender.choices, default=Gender.UNSPECIFIED)
+    """
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, primary_key=True
+    )
+    gender = models.CharField(
+        max_length=1, choices=Gender.choices, default=Gender.UNSPECIFIED
+    )
     is_blocked = models.BooleanField(default=False)
 
     def __str__(self):
-        return '{self.user.username}'.format(self=self)
+        return "{self.user.username}".format(self=self)
 
     @classmethod
-    def create(cls, username, password, email, gender='U', is_blocked=False):
-        user = User.objects.create_user(username=username, password=password, email=email)
+    def create(cls, username, password, email, gender="U", is_blocked=False):
+        user = User.objects.create_user(
+            username=username, password=password, email=email
+        )
         profile = cls(user=user, gender=gender, is_blocked=is_blocked)
         profile.save()
         return profile
@@ -65,7 +72,10 @@ class Sub_Subject(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['sub_subject_name', 'related_subject'], name='unique_sub_subject')
+            models.UniqueConstraint(
+                fields=["sub_subject_name", "related_subject"],
+                name="unique_sub_subject",
+            )
         ]
 
 
@@ -78,12 +88,12 @@ class Book(models.Model):
 
 
 class Grade(models.TextChoices):
-    GRADE7 = '7', 'Seventh Grade'
-    GRADE8 = '8', 'Eighth grade'
-    GRADE9 = '9', 'Ninth grade'
-    GRADE10 = '10', 'Tenth grade'
-    GRADE11 = '11', 'Eleventh grade'
-    GRADE12 = '12', 'Twelfth grade'
+    GRADE7 = "7", "Seventh Grade"
+    GRADE8 = "8", "Eighth grade"
+    GRADE9 = "9", "Ninth grade"
+    GRADE10 = "10", "Tenth grade"
+    GRADE11 = "11", "Eleventh grade"
+    GRADE12 = "12", "Twelfth grade"
 
 
 class Question(models.Model):
@@ -92,16 +102,21 @@ class Question(models.Model):
     content = RichTextBleachField(blank=True, null=True)
     publish_date = models.DateTimeField(default=timezone.now)
     subject = models.ForeignKey(Subject, on_delete=models.CASCADE)
-    sub_subject = models.ForeignKey(Sub_Subject, on_delete=models.CASCADE, blank=True, null=True)  # field not required
+    sub_subject = models.ForeignKey(
+        Sub_Subject, on_delete=models.CASCADE, blank=True, null=True
+    )  # field not required
     grade = models.CharField(max_length=2, choices=Grade.choices)
-    book = models.ForeignKey(Book, on_delete=models.CASCADE, null=True, blank=True)  # field not required
-    book_page = models.IntegerField(null=True, blank=True,
-                                    validators=[MinValueValidator(1), MaxValueValidator(999)])  # field not required
+    book = models.ForeignKey(
+        Book, on_delete=models.CASCADE, null=True, blank=True
+    )  # field not required
+    book_page = models.IntegerField(
+        null=True, blank=True, validators=[MinValueValidator(1), MaxValueValidator(999)]
+    )  # field not required
     is_edited = models.BooleanField(default=False)
-    tags = models.ManyToManyField('Tag', through='Question_Tag')
+    tags = models.ManyToManyField("Tag", through="Question_Tag")
 
     class Meta:
-        ordering = ['-publish_date']  # default ordered by publish_date
+        ordering = ["-publish_date"]  # default ordered by publish_date
 
     def __str__(self):
         return f"Question #{self.id} : {self.title} ( {self.publish_date.strftime('%d/%m/%Y %H:%M')} )"
@@ -121,22 +136,22 @@ class Question(models.Model):
                 new_pair.tag = tag
                 new_pair.save()
 
-    def get_answers_feed(self, filter_type=''):
-        '''
+    def get_answers_feed(self, filter_type=""):
+        """
         Get all the answers in the DB for that question
         Also get filter type param for chosing between date / likes count filter
-        '''
+        """
         answers = self.answer_set
-        if filter_type == 'date' or filter_type == '':
-            answers = answers.order_by('-publish_date')
-        elif filter_type == 'votes':
-            answers = answers.annotate(q_count=Count('likes')).order_by('-q_count')
+        if filter_type == "date" or filter_type == "":
+            answers = answers.order_by("-publish_date")
+        elif filter_type == "votes":
+            answers = answers.annotate(q_count=Count("likes")).order_by("-q_count")
         else:
             raise Http404()
         return answers
 
     def get_question_title(self):
-        return str(self.subject) + '-' + self.title
+        return str(self.subject) + "-" + self.title
 
     def get_answers_num(self):
         return self.answer_set.count()
@@ -151,10 +166,14 @@ class Answer(models.Model):
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
     content = RichTextBleachField(blank=True, null=True)
     publish_date = models.DateTimeField(default=timezone.now)
-    likes = models.ManyToManyField(Profile, blank=True, related_name='user_answer_likes')
-    dislikes = models.ManyToManyField(Profile, blank=True, related_name='user_answer_dislikes')
+    likes = models.ManyToManyField(
+        Profile, blank=True, related_name="user_answer_likes"
+    )
+    dislikes = models.ManyToManyField(
+        Profile, blank=True, related_name="user_answer_dislikes"
+    )
     is_edited = models.BooleanField(default=False)
-    ordering = ['publish_date']
+    ordering = ["publish_date"]
 
     def __str__(self):
         return self.content
@@ -194,17 +213,24 @@ class Answer(models.Model):
         answers = question.get_answers_feed(sort_answer_by)
         answers_tuples = []
         for answer in answers:
-            answers_tuples.append((answer, answer.profile_liked(profile), answer.profile_disliked(profile)))
+            answers_tuples.append(
+                (
+                    answer,
+                    answer.profile_liked(profile),
+                    answer.profile_disliked(profile),
+                )
+            )
         return answers_tuples
 
     @property
     def show_content(self):
         from django.utils.html import strip_tags
+
         return strip_tags(self.content)
 
     @classmethod
     def get_answers_by_date(cls):
-        return cls.objects.order_by('-publish_date')
+        return cls.objects.order_by("-publish_date")
 
     @classmethod
     def get_all_user_answers(cls, profile):
@@ -213,34 +239,35 @@ class Answer(models.Model):
 
 class Tag(models.Model):
     tag_name = models.CharField(max_length=20)
-    questions = models.ManyToManyField('Question', through='Question_Tag')
+    questions = models.ManyToManyField("Question", through="Question_Tag")
 
     def __str__(self):
         return self.tag_name
 
     # The function returnss all tags ordered by name tag.
     @classmethod
-    def tags_feed(cls, search=''):
-        return cls.objects.filter(tag_name__contains=search).order_by('tag_name')
+    def tags_feed(cls, search=""):
+        return cls.objects.filter(tag_name__contains=search).order_by("tag_name")
 
     @classmethod
     def check_tag_array(cls, tags_array):
-        if(len(tags_array) > 5):
+        if len(tags_array) > 5:
             return False
         for tag in tags_array:
-            if(len(tag) < 2 or len(tag) > 20):
+            if len(tag) < 2 or len(tag) > 20:
                 return False
         return True
 
 
 class Question_Tag(models.Model):
-    question = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='question_ID')
-    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name='tag_ID')
+    question = models.ForeignKey(
+        Question, on_delete=models.CASCADE, related_name="question_ID"
+    )
+    tag = models.ForeignKey(Tag, on_delete=models.CASCADE, related_name="tag_ID")
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(
-                fields=['question', 'tag'], name='question_tag')
+            models.UniqueConstraint(fields=["question", "tag"], name="question_tag")
         ]
 
     def __str__(self):
