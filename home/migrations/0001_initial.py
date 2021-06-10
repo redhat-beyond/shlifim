@@ -9,18 +9,31 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ('auth', '0012_alter_user_first_name_max_length'),
+        ("auth", "0012_alter_user_first_name_max_length"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Profile',
+            name="Profile",
             fields=[
-                ('user', models.OneToOneField(on_delete=django.db.models.deletion.CASCADE, primary_key=True,
-                                              serialize=False, to='auth.user')),
-                ('gender', models.CharField(choices=[('M', 'Male'), ('F', 'Female'), ('U', 'Unspecified')],
-                                            default='U', max_length=1)),
-                ('is_blocked', models.BooleanField(default=False)),
+                (
+                    "user",
+                    models.OneToOneField(
+                        on_delete=django.db.models.deletion.CASCADE,
+                        primary_key=True,
+                        serialize=False,
+                        to="auth.user",
+                    ),
+                ),
+                (
+                    "gender",
+                    models.CharField(
+                        choices=[("M", "Male"), ("F", "Female"), ("U", "Unspecified")],
+                        default="U",
+                        max_length=1,
+                    ),
+                ),
+                ("is_blocked", models.BooleanField(default=False)),
             ],
         ),
     ]

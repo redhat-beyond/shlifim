@@ -19,10 +19,12 @@ class TestDisplayQuestionFeature:
             """
             prev_is_edited_val = answers[0].is_edited
             answers[0].set_is_edited(not prev_is_edited_val)
-            assert(prev_is_edited_val != answers[0].is_edited)
+            assert prev_is_edited_val != answers[0].is_edited
 
         @pytest.mark.django_db
-        @pytest.mark.parametrize(('filter_type, expected'), [('date', 'Answer 2'), ('votes', 'Answer 1')])
+        @pytest.mark.parametrize(
+            ("filter_type, expected"), [("date", "Answer 2"), ("votes", "Answer 1")]
+        )
         def test_answers_feed(self, filter_type, expected, answers):
             """
             Tests if get_answers_feed returns queryset of all the answers of
@@ -41,13 +43,13 @@ class TestDisplayQuestionFeature:
             should return question subject and question title
             """
             question = Question.objects.get(id=1)
-            assert(question.get_question_title() == "Math-question from math course")
+            assert question.get_question_title() == "Math-question from math course"
 
     class TestHTMLRelated:
         @pytest.mark.django_db
         @pytest.fixture
         def response(self, client):
-            url = reverse('question-detail', args=[14])
+            url = reverse("question-detail", args=[14])
             response = client.get(url)
             return response
 
@@ -64,53 +66,74 @@ class TestDisplayQuestionFeature:
 
         @pytest.mark.django_db
         def test_response_context(self, response):
-            '''
+            """
             Testing if the context passed to the view contains the right contents
-            '''
+            """
             expected_pairs = [
-                ('question', 'Question #14 : g forwards, it was even later than ( 28/04/2021 23:14 )'),
-                ('answers_tuples', '[(<Answer: Answer B>, False, False), ' +
-                 '(<Answer: Answer A>, False, False), ' +
-                 '(<Answer: Popular Answer>, False, False), ' +
-                 '(<Answer: Old Answer>, False, False)]'),
-                ('answersCount', '4'),
-                ('tags', '<QuerySet [{\'id\': 3, \'tag_name\': \'Bagrut_Exam\'}, ' +
-                 '{\'id\': 4, \'tag_name\': \'Hebrew\'}, {\'id\': 8, \'tag_name\': \'java\'}, ' +
-                 '{\'id\': 13, \'tag_name\': \'all_my_sons\'}]>'),
-                ('title', 'History-g forwards, it was even later than')
-                ]
+                (
+                    "question",
+                    "Question #14 : g forwards, it was even later than ( 28/04/2021 23:14 )",
+                ),
+                (
+                    "answers_tuples",
+                    "[(<Answer: Answer B>, False, False), "
+                    + "(<Answer: Answer A>, False, False), "
+                    + "(<Answer: Popular Answer>, False, False), "
+                    + "(<Answer: Old Answer>, False, False)]",
+                ),
+                ("answersCount", "4"),
+                (
+                    "tags",
+                    "<QuerySet [{'id': 3, 'tag_name': 'Bagrut_Exam'}, "
+                    + "{'id': 4, 'tag_name': 'Hebrew'}, {'id': 8, 'tag_name': 'java'}, "
+                    + "{'id': 13, 'tag_name': 'all_my_sons'}]>",
+                ),
+                ("title", "History-g forwards, it was even later than"),
+            ]
             for check, expected in expected_pairs:
                 assert str(response.context[check]) == expected
 
-        @pytest.mark.parametrize(('filter_type, expected'), [('date', 'Answer B'), ('votes', 'Popular Answer')])
+        @pytest.mark.parametrize(
+            ("filter_type, expected"),
+            [("date", "Answer B"), ("votes", "Popular Answer")],
+        )
         @pytest.mark.django_db
         def test_sorting_answers(self, client, filter_type, expected):
-            url = f'/explore/question_14/?sortanswersby={filter_type}'
+            url = f"/explore/question_14/?sortanswersby={filter_type}"
             response = client.get(url)
-            answer = response.context['answers_tuples'][0][0]
+            answer = response.context["answers_tuples"][0][0]
             assert str(answer.content) == expected
 
         @pytest.mark.django_db
         def test_invalid_question_url(self, client):
-            url = reverse('question-detail', args=[Question.objects.count()+1])
+            url = reverse("question-detail", args=[Question.objects.count() + 1])
             response = client.get(url)
             assert response.status_code == 404
 
         @pytest.mark.django_db
         def test_invalid_answersort_url(self, client):
-            url = '/explore/question_1/?sortanswersby=BAD'
+            url = "/explore/question_1/?sortanswersby=BAD"
             response = client.get(url)
             assert response.status_code == 404
 
     class TestThumbsRouting:
         @pytest.mark.django_db
         def test_logged_user_good_route(self, logged_client):
-            response = logged_client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/up/{DISLIKED_ANSWER_ID}')
+            response = logged_client.get(
+                f"/explore/question_{TEST_QUESTION_ID}/thumb/up/{DISLIKED_ANSWER_ID}"
+            )
             assert response.status_code == 302
             assert response.url == f"/explore/question_{TEST_QUESTION_ID}/"
 
-        @pytest.mark.parametrize(('bad_url'), [(f'/explore/question_{TEST_QUESTION_ID}/thumb/BAD/{DISLIKED_ANSWER_ID}'),
-                                 (f'/explore/question_{TEST_QUESTION_ID}/thumb/up/{INVALID_ANSWER_ID}')])
+        @pytest.mark.parametrize(
+            ("bad_url"),
+            [
+                (
+                    f"/explore/question_{TEST_QUESTION_ID}/thumb/BAD/{DISLIKED_ANSWER_ID}"
+                ),
+                (f"/explore/question_{TEST_QUESTION_ID}/thumb/up/{INVALID_ANSWER_ID}"),
+            ],
+        )
         @pytest.mark.django_db
         def test_logged_user_bad_route(self, logged_client, bad_url):
             response = logged_client.get(bad_url)
@@ -118,20 +141,28 @@ class TestDisplayQuestionFeature:
 
         @pytest.mark.django_db
         def test_unauthorized_response(self, client):
-            response = client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/up/9')
+            response = client.get(f"/explore/question_{TEST_QUESTION_ID}/thumb/up/9")
             assert response.status_code == 401
 
     class TestThumbsView:
-        @pytest.mark.parametrize(('answer_id', 'thumb_type', 'like_val', 'false_val'),
-                                 [(DISLIKED_ANSWER_ID, 'up', True, False),
-                                 (LIKED_ANSWER_ID, 'up', False, False),
-                                 (DISLIKED_ANSWER_ID, 'down', False, False),
-                                 (LIKED_ANSWER_ID, 'down', False, True)])
+        @pytest.mark.parametrize(
+            ("answer_id", "thumb_type", "like_val", "false_val"),
+            [
+                (DISLIKED_ANSWER_ID, "up", True, False),
+                (LIKED_ANSWER_ID, "up", False, False),
+                (DISLIKED_ANSWER_ID, "down", False, False),
+                (LIKED_ANSWER_ID, "down", False, True),
+            ],
+        )
         @pytest.mark.django_db
-        def test_thumbs_view(self, logged_client, answer_id, thumb_type, like_val, false_val):
-            response = logged_client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/{thumb_type}/{answer_id}')
+        def test_thumbs_view(
+            self, logged_client, answer_id, thumb_type, like_val, false_val
+        ):
+            response = logged_client.get(
+                f"/explore/question_{TEST_QUESTION_ID}/thumb/{thumb_type}/{answer_id}"
+            )
             response = logged_client.get(response.url)
-            answers_tuples = response.context['answers_tuples']
+            answers_tuples = response.context["answers_tuples"]
             for answer, like, dislike in answers_tuples:
                 if answer.id == answer_id:
                     assert like == like_val and dislike == false_val
@@ -142,8 +173,12 @@ class TestDisplayQuestionFeature:
             answer_id2 = answers[1].id
             assert answers[0].likes.exists() is False
             assert answers[1].dislikes.exists() is False
-            logged_client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/up/{answer_id1}')
-            response = logged_client.get(f'/explore/question_{TEST_QUESTION_ID}/thumb/down/{answer_id2}')
+            logged_client.get(
+                f"/explore/question_{TEST_QUESTION_ID}/thumb/up/{answer_id1}"
+            )
+            response = logged_client.get(
+                f"/explore/question_{TEST_QUESTION_ID}/thumb/down/{answer_id2}"
+            )
             profile = response.wsgi_request.profile
             assert profile in answers[0].likes.all()
             assert profile in answers[1].dislikes.all()

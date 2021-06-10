@@ -3,18 +3,38 @@ from home.models import Tag
 
 
 class TestTagModelFunctions:
-    @pytest.mark.parametrize("valid_tags",
-                             [([]), (["beyond_01"]), (["beyond_01", "beyond_02"]),
-                              (["beyond_01", "beyond_02", "beyond_03"]),
-                              (["beyond_01", "beyond_02", "beyond_03", "beyond_04"]),
-                              (["beyond_01", "beyond_02", "beyond_03", "beyond_04", "beyond_05"])])
+    @pytest.mark.parametrize(
+        "valid_tags",
+        [
+            ([]),
+            (["beyond_01"]),
+            (["beyond_01", "beyond_02"]),
+            (["beyond_01", "beyond_02", "beyond_03"]),
+            (["beyond_01", "beyond_02", "beyond_03", "beyond_04"]),
+            (["beyond_01", "beyond_02", "beyond_03", "beyond_04", "beyond_05"]),
+        ],
+    )
     @pytest.mark.django_db
     def test_check_tag_array_valid_data(self, valid_tags):
         assert Tag.check_tag_array(valid_tags) is True
 
-    @pytest.mark.parametrize("invalid_tags",
-                             [(["1"]), (["beyond_01beyond_01beyond_01"]),
-                              (["beyond_01", "beyond_02", "beyond_03", "beyond_04", "beyond_05", "beyond_06"])])
+    @pytest.mark.parametrize(
+        "invalid_tags",
+        [
+            (["1"]),
+            (["beyond_01beyond_01beyond_01"]),
+            (
+                [
+                    "beyond_01",
+                    "beyond_02",
+                    "beyond_03",
+                    "beyond_04",
+                    "beyond_05",
+                    "beyond_06",
+                ]
+            ),
+        ],
+    )
     @pytest.mark.django_db
     def test_check_tag_array_invalid_data(self, invalid_tags):
         assert Tag.check_tag_array(invalid_tags) is False
@@ -29,19 +49,19 @@ class TestTagModelFunctions:
 
     @pytest.mark.django_db
     def test_tags_feed_with_filter(self, tag_test_data):
-        assert Tag.tags_feed('_t').count() == 1
+        assert Tag.tags_feed("_t").count() == 1
 
     @pytest.mark.django_db
     def test_tags_feed_after_delete(self, tag_test_data):
-        Tag.objects.filter(tag_name='test_tag_1').delete()
+        Tag.objects.filter(tag_name="test_tag_1").delete()
         assert Tag.tags_feed().count() == 20
 
     @pytest.mark.django_db
     def test_tags_feed_no_result(self):
-        assert Tag.tags_feed('testtesttesttest').count() == 0
+        assert Tag.tags_feed("testtesttesttest").count() == 0
 
     @pytest.fixture
     def tag_test_data(self):
-        tag = Tag(tag_name='test_tag_1')
+        tag = Tag(tag_name="test_tag_1")
         tag.save()
         return tag

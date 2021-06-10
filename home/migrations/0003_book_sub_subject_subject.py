@@ -7,37 +7,72 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0002_test_data'),
+        ("home", "0002_test_data"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Subject',
+            name="Subject",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('subject_name', models.CharField(max_length=100, unique=True)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("subject_name", models.CharField(max_length=100, unique=True)),
             ],
         ),
         migrations.CreateModel(
-            name='Sub_Subject',
+            name="Sub_Subject",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('sub_subject_name', models.CharField(max_length=100)),
-                ('related_subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.subject')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("sub_subject_name", models.CharField(max_length=100)),
+                (
+                    "related_subject",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="home.subject"
+                    ),
+                ),
             ],
         ),
         migrations.CreateModel(
-            name='Book',
+            name="Book",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('book_name', models.CharField(max_length=100, unique=True)),
-                ('related_subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.subject')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("book_name", models.CharField(max_length=100, unique=True)),
+                (
+                    "related_subject",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="home.subject"
+                    ),
+                ),
             ],
         ),
         migrations.AddConstraint(
-            model_name='sub_subject',
-            constraint=models.UniqueConstraint(fields=(
-                                'sub_subject_name', 'related_subject'),
-                                name='unique_sub_subject'),
+            model_name="sub_subject",
+            constraint=models.UniqueConstraint(
+                fields=("sub_subject_name", "related_subject"),
+                name="unique_sub_subject",
+            ),
         ),
     ]

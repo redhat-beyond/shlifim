@@ -8,30 +8,75 @@ import django.utils.timezone
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('home', '0004_test_data_book_subsubject_subject'),
+        ("home", "0004_test_data_book_subsubject_subject"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='Question',
+            name="Question",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('title', models.CharField(max_length=50)),
-                ('content', models.TextField()),
-                ('publish_date', models.DateTimeField(default=django.utils.timezone.now)),
-                ('grade', models.CharField(choices=[('7', 'Seventh Grade'), ('8', 'Eighth grade'),
-                                                    ('9', 'Ninth grade'), ('10', 'Tenth grade'),
-                                                    ('11', 'Eleventh grade'), ('12', 'Twelfth grade')], max_length=2)),
-                ('book_page', models.IntegerField(blank=True, null=True)),
-                ('is_edited', models.BooleanField(default=False)),
-                ('book', models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE, to='home.book')),
-                ('profile', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.profile')),
-                ('sub_subject', models.ForeignKey(blank=True, on_delete=django.db.models.deletion.CASCADE,
-                                                  to='home.sub_subject')),
-                ('subject', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='home.subject')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("title", models.CharField(max_length=50)),
+                ("content", models.TextField()),
+                (
+                    "publish_date",
+                    models.DateTimeField(default=django.utils.timezone.now),
+                ),
+                (
+                    "grade",
+                    models.CharField(
+                        choices=[
+                            ("7", "Seventh Grade"),
+                            ("8", "Eighth grade"),
+                            ("9", "Ninth grade"),
+                            ("10", "Tenth grade"),
+                            ("11", "Eleventh grade"),
+                            ("12", "Twelfth grade"),
+                        ],
+                        max_length=2,
+                    ),
+                ),
+                ("book_page", models.IntegerField(blank=True, null=True)),
+                ("is_edited", models.BooleanField(default=False)),
+                (
+                    "book",
+                    models.ForeignKey(
+                        blank=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.book",
+                    ),
+                ),
+                (
+                    "profile",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="home.profile"
+                    ),
+                ),
+                (
+                    "sub_subject",
+                    models.ForeignKey(
+                        blank=True,
+                        on_delete=django.db.models.deletion.CASCADE,
+                        to="home.sub_subject",
+                    ),
+                ),
+                (
+                    "subject",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="home.subject"
+                    ),
+                ),
             ],
             options={
-                'ordering': ['-publish_date'],
+                "ordering": ["-publish_date"],
             },
         ),
     ]
