@@ -2,8 +2,8 @@ import pytest
 from home.models import Tag, Question_Tag
 
 
+@pytest.mark.django_db
 class TestQuestionTagModelFunctions:
-    @pytest.mark.django_db
     def test_add_tags_to_question(self, question_test_data):
         test_tags = ["test_tag_1", "test_tag_2", "test_tag_3"]
         question_test_data.add_tags_to_question(test_tags)
@@ -14,17 +14,14 @@ class TestQuestionTagModelFunctions:
             {"id": 23, "tag_name": "test_tag_3"},
         ]
 
-    @pytest.mark.django_db
     def test_field_questions_in_tag(self, question_tag_test_data):
         assert question_tag_test_data.questions.values().count() == 1
 
-    @pytest.mark.django_db
     def test_question_tag_table(self, question_test_data, question_tag_test_data):
         assert Question_Tag.objects.filter(
             question=question_test_data, tag=question_tag_test_data
         ).exists()
 
-    @pytest.mark.django_db
     def test_add_tags_to_question_one_new_input(
         self, question_test_data, question_tag_test_data
     ):

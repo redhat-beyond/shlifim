@@ -1,12 +1,16 @@
 import pytest
 from django.contrib.auth.models import User
 from home.models import Profile
+from django.urls import reverse
 from pytest_django.asserts import assertTemplateUsed
 from home.forms import SignUpForm
 
 
 @pytest.mark.django_db
 class TestSignUp:
+    signup_url = reverse("signup")
+    landing_page_url = reverse("landing-page")
+
     @pytest.fixture
     def valid_signup_details(self):
         return {
@@ -18,7 +22,7 @@ class TestSignUp:
         }
 
     def get_signup_page_status_code(self, client):
-        response = client.get("/signup")
+        response = client.get(self.signup_url)
         assert response.status_code == 200
 
     def test_valid_signup(self, valid_signup_details, client):
@@ -78,7 +82,7 @@ class TestSignUp:
         ],
     )
     def test_invalid_signup(self, invalid_signup_details, client):
-        response = client.post("/signup/", data=invalid_signup_details[0])
+        response = client.post(self.signup_url, data=invalid_signup_details[0])
         user = User.objects.filter(
             username=invalid_signup_details[0]["username"]
         ).first()
@@ -86,20 +90,20 @@ class TestSignUp:
         assert user is None
         assert response.status_code == 200
 
-    def test_valid_signup_redirection(self, valid_signup_details, client):
-        response = client.post("/signup/", data=valid_signup_details)
-        assert response.status_code == 302
-        assert response.url == "/"
-
     def test_authenticated_user_view_signup(self, client, authenticated_user):
-        response = client.get("/")
+        response = client.get(self.landing_page_url)
         assert "Sign up" not in str(response.content)
 
+    def test_valid_signup_redirection(self, valid_signup_details, client):
+        response = client.post(self.signup_url, data=valid_signup_details)
+        assert response.status_code == 302
+        assert response.url == self.landing_page_url
+
     def test_unauthenticated_user_view_signup(self, client):
-        response = client.get("/")
+        response = client.get(self.landing_page_url)
         assert "Sign up" in str(response.content)
 
     def test_signup_form_and_template_displayed(self, client):
-        response = client.get("/signup/")
+        response = client.get(self.signup_url)
         assert isinstance(response.context["form"], SignUpForm)
         assertTemplateUsed(response, "home/signup.html")
