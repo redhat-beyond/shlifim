@@ -164,7 +164,7 @@ class Question(models.Model):
 class Answer(models.Model):
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE)
     question = models.ForeignKey(Question, on_delete=models.CASCADE)
-    content = RichTextBleachField(blank=True, null=True)
+    content = RichTextBleachField(default="")
     publish_date = models.DateTimeField(default=timezone.now)
     likes = models.ManyToManyField(
         Profile, blank=True, related_name="user_answer_likes"

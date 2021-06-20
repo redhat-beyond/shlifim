@@ -46,7 +46,7 @@ class SignUpForm(UserCreationForm):
 
 
 class CommentForm(forms.ModelForm):
-    content = RichTextBleachField(blank=True, null=True)
+    content = RichTextBleachField(default="")
 
     class Meta:
         model = Answer
