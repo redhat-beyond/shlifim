@@ -1,8 +1,7 @@
-name: Flake8
+name: Flake8 and PyTest and Black
 on: pull_request
 jobs:
-  flake8:
-    name: Check code with Flake8
+  formatting and tests:
     runs-on: ubuntu-20.04
     container: fedora:32
     steps:
@@ -12,5 +11,11 @@ jobs:
         uses: actions/checkout@v2
       - name: Setup environment
         run: pipenv sync --dev
+      - name: Run Black
+        run: pipenv run python -m black .
       - name: Run Flake8
         run: pipenv run flake8 --max-line-length 120
+      - name: Run PyTest
+        run: pipenv run pytest -v
+     
+      
