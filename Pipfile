@@ -15,6 +15,7 @@ pytest = "*"
 django-ckeditor = "*"
 django-bleach = "*"
 bleach = "*"
+django-crispy-forms = "*"
 
 [requires]
 python_version = "3.8"
