@@ -1,7 +1,7 @@
 name: Flake8 and PyTest and Black
 on: pull_request
 jobs:
-  formatting and tests:
+  Format-And-Test:
     runs-on: ubuntu-20.04
     container: fedora:32
     steps:
