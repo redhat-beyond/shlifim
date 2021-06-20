@@ -13,6 +13,13 @@ class TestAddAnswer:
     def comment_content(self):
         return {"content": "test"}
 
+    def test_no_content_answer(
+        self, client, question_details_url, question_test_data, authenticated_user
+    ):
+        client.post(question_details_url, data={"content": ""})
+        answers_feed = question_test_data.get_answers_feed()
+        assert answers_feed.count() == 0
+
     def test_post_redirect(
         self, client, question_details_url, authenticated_user, comment_content
     ):
