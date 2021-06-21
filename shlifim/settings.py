@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "home.apps.HomeConfig",
     "ckeditor",
-    'crispy_forms',
+    "crispy_forms",
 ]
 
 MIDDLEWARE = [
@@ -137,4 +137,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.AutoField"
 
 MESSAGE_TAGS = {messages.ERROR: "danger"}
 
-CRISPY_TEMPLATE_PACK = 'bootstrap4'
+CRISPY_TEMPLATE_PACK = "bootstrap4"
