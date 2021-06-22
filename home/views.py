@@ -1,11 +1,10 @@
 from django.shortcuts import render, get_object_or_404, redirect, reverse
-from .models import Question, Tag, Profile, Answer
+from .models import Question, Tag, Answer
 from django.views.generic.list import ListView
 from django.views.generic import DeleteView
-from .forms import QuestionForm, SignUpForm, CommentForm
+from .forms import QuestionForm, CommentForm
 from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth import login, authenticate
 from django.contrib import messages
 from django.urls import reverse_lazy
 
@@ -67,11 +66,6 @@ def tags(request):
     else:
         tags = Tag.tags_feed()
     return render(request, "home/tags.html", {"tags": tags})
-
-
-def users(request):
-    profiles = Profile.profiles_feed()
-    return render(request, "home/users.html", {"profiles": profiles})
 
 
 @login_required(login_url="/login/")
@@ -136,36 +130,6 @@ class QuestionsListView(ListView):
 
         context.update(kwargs)
         return super().get_context_data(**context)
-
-
-def signup(request):
-    if request.method == "POST":
-        form = SignUpForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            raw_password = form.cleaned_data.get("password1")
-            user.save()
-            profile = Profile(user=user)
-            user = authenticate(username=user.username, password=raw_password)
-            profile.gender = form.cleaned_data.get("gender")
-            profile.save()
-            login(request, user)
-            return redirect("/")
-    else:
-        form = SignUpForm()
-    return render(request, "home/signup.html", {"form": form})
-
-
-def user_page(request, pk):
-    profile = get_object_or_404(Profile, pk=pk)
-    users_questions = Question.get_all_user_questions(profile)
-    users_answers = Answer.get_all_user_answers(profile)
-    context = {
-        "profile": profile,
-        "user_questions": users_questions,
-        "user_answers": users_answers,
-    }
-    return render(request, "home/user_page.html", context)
 
 
 class DeleteQuestionView(DeleteView):
