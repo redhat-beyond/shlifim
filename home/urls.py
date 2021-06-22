@@ -1,5 +1,4 @@
 from django.urls import path
-from django.contrib.auth import views as auth_views
 from . import views
 from .views import QuestionsListView
 
@@ -9,13 +8,6 @@ urlpatterns = [
     path("tags/", views.tags, name="tags"),
     path("explore/", QuestionsListView.as_view(), name="explore-page"),
     path("explore/new_question", views.new_question, name="new-question"),
-    path(
-        "login/",
-        auth_views.LoginView.as_view(template_name="home/login.html"),
-        name="login",
-    ),
-    path("logout/", auth_views.LogoutView.as_view(), name="logout"),
-    path("signup/", views.signup, name="signup"),
     path(
         "explore/question_<int:question_pk>/thumb/<string>/<int:answer_pk>",
         views.thumbs,
@@ -30,6 +22,4 @@ urlpatterns = [
         views.DeleteQuestionView.as_view(),
         name="question-delete",
     ),
-    path("users/<int:pk>", views.user_page, name="user-page"),
-    path("users", views.users, name="users"),
 ]
