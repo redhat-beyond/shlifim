@@ -1,17 +1,30 @@
 from django.db import migrations, transaction
+from django.utils import timezone
 from datetime import datetime
 import pytz
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("home", "0014_auto_20210425_2055"),
+        ("home", "0004_test_data_question"),
+        ("users", "0002_users_test_data"),
     ]
 
-    def create_answers_test_data(apps, schema_editor):
-        from home.models import Profile, Question, Answer
+    def generate_data(apps, schema_editor):
+        from home.models import Question, Answer
+        from users.models import Profile
 
         answer_test_data = [
+            (
+                1,
+                1,
+                "pretty sure its 2 but I suggesting you to check with another resources ",
+                timezone.now(),
+                [1, 2],
+                [3, 4],
+                False,
+            ),
+            (2, 2, "IDK", timezone.now(), [1], None, False),
             (
                 2,
                 1,
@@ -116,27 +129,6 @@ class Migration(migrations.Migration):
                     for profile_id in dislike_profiles:
                         answer.dislikes.add(profile_id)
 
-    def create_tags_test_data(apps, schema_editor):
-        from home.models import Tag, Question_Tag, Question
-
-        question_tag_test_data = [
-            ("Question", "Pitagoras"),
-            ("Question", "5th_Grade"),
-            ("question from math course", "5th_Grade"),
-            ("question from math course", "Pitagoras"),
-            ("question from bible course", "Bagrut_Exam"),
-            ("g forwards, it was even later than", "Hebrew"),
-            ("g forwards, it was even later than", "Bagrut_Exam"),
-        ]
-
-        with transaction.atomic():
-            # Create Question_Tag objects
-            for title, tag_name in question_tag_test_data:
-                curr_tag = Tag.objects.filter(tag_name=tag_name)
-                curr_question = Question.objects.filter(title=title)
-                Question_Tag(question=curr_question[0], tag=curr_tag[0]).save()
-
     operations = [
-        migrations.RunPython(create_answers_test_data),
-        migrations.RunPython(create_tags_test_data),
+        migrations.RunPython(generate_data),
     ]

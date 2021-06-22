@@ -3,7 +3,7 @@ from django.db import migrations, transaction
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("home", "0003_book_sub_subject_subject"),
+        ("home", "0002_initial"),
     ]
 
     def generate_data(apps, schema_editor):
@@ -59,7 +59,7 @@ class Migration(migrations.Migration):
             ("Exodus", "Bible"),
             ("Judges", "Bible"),
             ("All My Sons", "Literature"),
-            ("1948", "Literature"),
+            ("1984", "Literature"),
             ("antigona", "Literature"),
             ("Sapiens: A Brief History of Humankind", "History"),
             ("Modern Hebrew for Beginners", "Hebrew"),
