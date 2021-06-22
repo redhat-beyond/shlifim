@@ -1,9 +1,9 @@
 import pytest
 from django.contrib.auth.models import User
-from home.models import Profile
+from users.models import Profile
 from django.urls import reverse
 from pytest_django.asserts import assertTemplateUsed
-from home.forms import SignUpForm
+from users.forms import SignUpForm
 
 
 @pytest.mark.django_db
@@ -26,7 +26,7 @@ class TestSignUp:
         assert response.status_code == 200
 
     def test_valid_signup(self, valid_signup_details, client):
-        client.post("/signup/", data=valid_signup_details)
+        client.post(self.signup_url, data=valid_signup_details)
         user = User.objects.filter(username=valid_signup_details["username"])
         assert user is not None
         profile = Profile.objects.filter(user=user)
@@ -106,4 +106,4 @@ class TestSignUp:
     def test_signup_form_and_template_displayed(self, client):
         response = client.get(self.signup_url)
         assert isinstance(response.context["form"], SignUpForm)
-        assertTemplateUsed(response, "home/signup.html")
+        assertTemplateUsed(response, "users/signup.html")

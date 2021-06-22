@@ -46,9 +46,9 @@ class TestExplorePage:
         @pytest.mark.parametrize(
             ("tag_name", "wanted_questions_ids_lst"),
             [
-                ("Bagrut_Exam", [8, 2, 14]),
-                ("5th_Grade", [4, 3, 1]),
-                ("Pitagoras", [8, 3, 1]),
+                ("Bagrut_Exam", [2, 14]),
+                ("5th_Grade", [8, 2]),
+                ("Pitagoras", [8, 2]),
             ],
         )
         def test_questions_filter_by_tag(

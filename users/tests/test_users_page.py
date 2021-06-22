@@ -16,7 +16,7 @@ def test_url_status_code(client, user_id, expected):
 @pytest.mark.django_db
 def test_view_context_and_template(client):
     response = client.get(reverse("user-page", args=[1]))
-    assertTemplateUsed(response, "home/user_page.html")
+    assertTemplateUsed(response, "users/user_page.html")
     assert str(response.context["profile"]) == "Rebecca"
     assert isinstance(response.context["user_questions"], QuerySet)
     assert isinstance(response.context["user_answers"], QuerySet)
@@ -26,5 +26,5 @@ def test_view_context_and_template(client):
 def test_users_page(client):
     response = client.get(reverse("users"))
     assert response.status_code == 200
-    assertTemplateUsed(response, "home/users.html")
+    assertTemplateUsed(response, "users/users.html")
     assert isinstance(response.context["profiles"], QuerySet)
