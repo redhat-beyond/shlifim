@@ -33,7 +33,7 @@
 			  </a>
 			  {{ answer.dislikes.count }}
 			  {% if not is_user_logged_in %}
-				<small><a href="{% url 'login' %}">Login</a> to like</small>
+				<small><a href="{% url 'login' %}?next={% firstof request.path '/' %}">Login</a> to like</small>
 			 {% endif %}
         </div>
 		</div>
