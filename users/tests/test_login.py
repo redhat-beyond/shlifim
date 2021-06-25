@@ -25,7 +25,7 @@ class TestLogin:
         client.logout()
         response = client.get(self.landing_page_url)
         assert not response.wsgi_request.user.is_authenticated  # logged out
-        client.post("/login/", valid_user_details)
+        client.post(self.login_url, valid_user_details)
         response = client.get(self.landing_page_url)
         assert response.wsgi_request.user.is_authenticated  # successfully logged in
 
@@ -46,5 +46,7 @@ class TestLogin:
 
     @pytest.mark.parametrize(("next"), [("about"), ("explore"), ("tags")])
     def test_redirection_to_last_page_url(self, client, next, valid_user_details):
-        response = client.post("/login/?next=/{0}/".format(next), valid_user_details)
+        response = client.post(
+            "/users/login?next=/{0}/".format(next), valid_user_details
+        )
         assert response.url == "/{0}/".format(next)

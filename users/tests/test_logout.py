@@ -30,5 +30,5 @@ class TestLogout:
 
     @pytest.mark.parametrize(("next"), [("about"), ("explore"), ("tags")])
     def test_redirection_to_last_page_url(self, client, request, next):
-        response = client.get("/logout/?next=/{0}/".format(next))
+        response = client.get("/users/logout?next=/{0}/".format(next))
         assert response.url == "/{0}/".format(next)

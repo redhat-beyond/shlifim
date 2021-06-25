@@ -1,13 +1,17 @@
 from django.db import migrations, transaction
-from home.models import Tag, Question_Tag, Question
 
 
 class Migration(migrations.Migration):
-    dependencies = [("home", "0017_alter_question_content")]
+    dependencies = [("home", "0005_test_data_answer")]
 
     def generate_data(apps, schema_editor):
+        from home.models import Tag, Question_Tag, Question
 
         tag_test_data = [
+            "Pitagoras",
+            "5th_Grade",
+            "Bagrut_Exam",
+            "Hebrew",
             "benny_goren",
             "need_help",
             "algebra",
@@ -22,10 +26,18 @@ class Migration(migrations.Migration):
             "urgent",
             "trigonometry",
             "Bagrut",
-            "1948_book",
+            "1984_book",
             "novel",
         ]
+
         question_tag_test_data = [
+            ("8", "Pitagoras"),
+            ("8", "5th_Grade"),
+            ("2", "5th_Grade"),
+            ("2", "Pitagoras"),
+            ("2", "Bagrut_Exam"),
+            ("14", "Hebrew"),
+            ("14", "Bagrut_Exam"),
             ("8", "algebra"),
             ("1", "Bagrut"),
             ("3", "urgent"),
@@ -34,7 +46,7 @@ class Migration(migrations.Migration):
             ("6", "urgent"),
             ("6", "israel"),
             ("7", "novel"),
-            ("9", "1948_book"),
+            ("9", "1984_book"),
             ("10", "c#"),
             ("10", "the_holocaust"),
             ("11", "geometry"),
@@ -97,10 +109,10 @@ class Migration(migrations.Migration):
             for tag_name in tag_test_data:
                 Tag(tag_name=tag_name).save()
             # Create Question_Tag objects
-            for id, tag_name in question_tag_test_data:
-                curr_tag = Tag.objects.get(tag_name=tag_name)
-                curr_question = Question.objects.get(id=id)
-                Question_Tag(question=curr_question, tag=curr_tag).save()
+            for question_id, tag_name in question_tag_test_data:
+                curr_tag = Tag.objects.filter(tag_name=tag_name)
+                curr_question = Question.objects.filter(id=question_id)
+                Question_Tag(question=curr_question[0], tag=curr_tag[0]).save()
 
     operations = [
         migrations.RunPython(generate_data),

@@ -1,18 +1,129 @@
 from django.db import migrations, transaction
+from django.utils import timezone
 from datetime import datetime
 import pytz
 
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("home", "0012_add_users_test_data"),
+        ("home", "0003_test_data_book_subsubject_subject"),
+        ("users", "0002_users_test_data"),
     ]
 
     def generate_data(apps, schema_editor):
         from django.contrib.auth.models import User
-        from home.models import Profile, Subject, Sub_Subject, Question
+        from home.models import Subject, Sub_Subject, Book, Question
+        from users.models import Profile
 
         question_test_data = [
+            (
+                "Rebecca",
+                "question from math course",
+                "Hey , Can someome help me solve the equation 1+1?",
+                timezone.now(),
+                "Math",
+                "Algebra",
+                "7",
+                "Benny-Goren",
+                14,
+                True,
+            ),
+            (
+                "Rebecca",
+                "question from bible course",
+                "Does god exist?",
+                timezone.now(),
+                "Bible",
+                "Prophecies",
+                "7",
+                "",
+                None,
+                False,
+            ),
+            (
+                "Aviv",
+                "Question",
+                "Was Alessandro Volta a professor of chemistry?",
+                timezone.now(),
+                "Chemistry",
+                "",
+                "11",
+                "",
+                None,
+                False,
+            ),
+            (
+                "Aviv",
+                "question about ants",
+                "Do the ants eat plants, meats, or both?	both",
+                timezone.now(),
+                "Biology",
+                "Cell Biology",
+                "10",
+                "Benny-Goren",
+                50,
+                False,
+            ),
+            (
+                "Ido",
+                "Need help",
+                "Is Hebrew the largest member of the Semitic language family??",
+                timezone.now(),
+                "Hebrew",
+                "Writing",
+                "10",
+                "Modern Hebrew for Beginners",
+                23,
+                False,
+            ),
+            (
+                "Ido",
+                "question",
+                "Where is the Berliner Dom located?",
+                timezone.now(),
+                "Geography",
+                "Atmosphere",
+                "12",
+                "",
+                None,
+                False,
+            ),
+            (
+                "Rebecca",
+                "Novel price",
+                "Did Tesla win the Nobel Prize??",
+                timezone.now(),
+                "History",
+                "Ancient history‎",
+                "12",
+                "Sapiens: A Brief History of Humankind",
+                23,
+                False,
+            ),
+            (
+                "Danit",
+                "Question from  Benny Goren Book",
+                "Can you help me solve this equation 2X=8?",
+                timezone.now(),
+                "Math",
+                "Algebra",
+                "7",
+                "Benny-Goren",
+                100,
+                False,
+            ),
+            (
+                "Danit",
+                "1984",
+                "Who is the author of the book 1984?",
+                timezone.now(),
+                "Literature",
+                "20th Century",
+                "7",
+                "1984",
+                None,
+                False,
+            ),
             (
                 "Rebecca",
                 "where he was. He must have tried it a hundred time",
@@ -855,11 +966,12 @@ God in Heaven! he thought. It was half past six and the hands were quietly movin
                 is_edited,
             ) in question_test_data:
                 curr_subject = Subject.objects.get(subject_name=subject_name)
-                curr_sub_subject = None
                 if sub_subject_name != "":
-                    curr_sub_subject = Sub_Subject.objects.get(
-                        sub_subject_name=sub_subject_name, related_subject=curr_subject
-                    )
+                    curr_sub_subject = Sub_Subject.objects.filter(
+                        sub_subject_name=sub_subject_name
+                    ).first()
+                if book_name != "":
+                    curr_book = Book.objects.get(book_name=book_name)
                 user = User.objects.get(username=username)
                 profile = Profile.objects.get(user=user)
                 Question(
@@ -870,7 +982,7 @@ God in Heaven! he thought. It was half past six and the hands were quietly movin
                     subject=curr_subject,
                     sub_subject=curr_sub_subject,
                     grade=grade,
-                    book=None,
+                    book=curr_book,
                     book_page=book_page,
                     is_edited=is_edited,
                 ).save()

@@ -1,6 +1,7 @@
 import pytest
 import pytz
-from home.models import Profile, Subject, Question, Answer
+from home.models import Subject, Question, Answer
+from users.models import Profile
 from django.contrib.auth.models import User
 from django.utils import timezone
 from datetime import datetime

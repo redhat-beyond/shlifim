@@ -3,12 +3,12 @@ from django.db import migrations, transaction
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("home", "0001_initial"),
+        ("users", "0001_initial"),
     ]
 
     def generate_data(apps, schema_editor):
         from django.contrib.auth.models import User
-        from home.models import Profile
+        from users.models import Profile
 
         user_test_data = [
             ("Rebecca", "RebeccaRebecca", "Rebecca@gmail.com", "F"),
@@ -36,6 +36,21 @@ class Migration(migrations.Migration):
             profile = Profile.objects.get(user=User.objects.get(username="Rebecca"))
             profile.is_blocked = True
             profile.save()
+
+            # Create Blocked user profile
+            user = User.objects.create_user(
+                username="BlockedUser",
+                password="BlockedUserBlockedUser",
+                email="BlockedUser@gmail.com",
+            )
+            blockedProfile = Profile(user=user)
+            blockedProfile.is_blocked = True
+            blockedProfile.save()
+            # Create Admin superuser profile
+            superuser = User.objects.create_superuser(
+                username="Admin", password="Admin", email="Admin@gmail.com"
+            ).save()
+            Profile(user=superuser).save()
 
     operations = [
         migrations.RunPython(generate_data),
