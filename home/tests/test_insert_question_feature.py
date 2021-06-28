@@ -250,7 +250,7 @@ class TestInsertQuestionFeature:
                         "title": "Question in Math",
                         "subject": 1,
                         "grade": Grade.GRADE7,
-                        "tags_": "beyond_01",
+                        "tags_": "beyond01",
                     }
                 ),
                 # User entered all the required fields and one tag
@@ -259,7 +259,7 @@ class TestInsertQuestionFeature:
                         "title": "Question in Math",
                         "subject": 1,
                         "grade": Grade.GRADE7,
-                        "tags_": "beyond_01, beyond_02",
+                        "tags_": "beyond01, beyond02",
                     }
                 ),
                 # User entered all the required fields and two tags
@@ -268,7 +268,7 @@ class TestInsertQuestionFeature:
                         "title": "Question in Math",
                         "subject": 1,
                         "grade": Grade.GRADE7,
-                        "tags_": "beyond_01, beyond_02, beyond_03",
+                        "tags_": "beyond01, beyond02, beyond03",
                     }
                 ),
                 # User entered all the required fields and three tags
@@ -277,7 +277,7 @@ class TestInsertQuestionFeature:
                         "title": "Question in Math",
                         "subject": 1,
                         "grade": Grade.GRADE7,
-                        "tags_": "beyond_01, beyond_02, beyond_03, beyond_04",
+                        "tags_": "beyond01, beyond02, beyond03, beyond04",
                     }
                 ),
                 # User entered all the required fields and four tags
@@ -286,7 +286,7 @@ class TestInsertQuestionFeature:
                         "title": "Question in Math",
                         "subject": 1,
                         "grade": Grade.GRADE7,
-                        "tags_": "beyond_01, beyond_02, beyond_03, beyond_04, beyond_05",
+                        "tags_": "beyond01, beyond02, beyond03, beyond04, beyond05",
                     }
                 ),
                 # User entered all the required fields and five tags
@@ -432,7 +432,7 @@ class TestInsertQuestionFeature:
                     ),
                     """Invalid data.
              You may enter up to 5 tags which are separated by ",".
-             Each tag must have between 2-20 characters.""",
+             Each tag must have between 2-20 characters. And cannot contain special characters (like * # " etc.) """,
                 ),
                 # User entered all the required fields and invalid tags (more than 20 chars tag)
                 (
@@ -447,7 +447,7 @@ class TestInsertQuestionFeature:
                     ),
                     """Invalid data.
              You may enter up to 5 tags which are separated by ",".
-             Each tag must have between 2-20 characters.""",
+             Each tag must have between 2-20 characters. And cannot contain special characters (like * # " etc.) """,
                 ),
                 # User entered all the required fields and invalid tags (1 char tag)
                 (
@@ -462,7 +462,7 @@ class TestInsertQuestionFeature:
                     ),
                     """Invalid data.
              You may enter up to 5 tags which are separated by ",".
-             Each tag must have between 2-20 characters.""",
+             Each tag must have between 2-20 characters. And cannot contain special characters (like * # " etc.) """,
                 ),
                 # User entered all the required fields and invalid tags (more than 5 tags)
             ],
