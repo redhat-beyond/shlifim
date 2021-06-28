@@ -8,11 +8,11 @@ class TestTagModelFunctions:
         "valid_tags",
         [
             ([]),
-            (["beyond_01"]),
-            (["beyond_01", "beyond_02"]),
-            (["beyond_01", "beyond_02", "beyond_03"]),
-            (["beyond_01", "beyond_02", "beyond_03", "beyond_04"]),
-            (["beyond_01", "beyond_02", "beyond_03", "beyond_04", "beyond_05"]),
+            (["beyond01"]),
+            (["beyond01", "beyond02"]),
+            (["beyond01", "beyond02", "beyond03"]),
+            (["beyond01", "beyond02", "beyond03", "beyond04"]),
+            (["beyond01", "beyond02", "beyond03", "beyond04", "beyond05"]),
         ],
     )
     def test_check_tag_array_valid_data(self, valid_tags):
@@ -23,14 +23,15 @@ class TestTagModelFunctions:
         [
             (["1"]),
             (["beyond_01beyond_01beyond_01"]),
+            (["check##"]),
             (
                 [
-                    "beyond_01",
-                    "beyond_02",
-                    "beyond_03",
-                    "beyond_04",
-                    "beyond_05",
-                    "beyond_06",
+                    "beyond01",
+                    "beyond02",
+                    "beyond03",
+                    "beyond04",
+                    "beyond05",
+                    "beyond06",
                 ]
             ),
         ],

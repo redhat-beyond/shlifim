@@ -202,12 +202,13 @@ class Tag(models.Model):
 
     @classmethod
     def check_tag_array(cls, tags_array):
+        is_valid = True
         if len(tags_array) > 5:
-            return False
+            is_valid = False
         for tag in tags_array:
-            if len(tag) < 2 or len(tag) > 20:
-                return False
-        return True
+            if len(tag) < 2 or len(tag) > 20 or not tag.isalnum():
+                is_valid = False
+        return is_valid
 
 
 class Question_Tag(models.Model):

@@ -84,13 +84,13 @@ def new_question(request):
                 question_form.profile = request.profile
                 question_form.save()
                 if tags_status:
-                    questionInstane = Question.objects.get(id=question_form.id)
-                    questionInstane.add_tags_to_question(tags_array)
+                    question_instance = Question.objects.get(id=question_form.id)
+                    question_instance.add_tags_to_question(tags_array)
                 return redirect("question-detail", question_form.id)
             else:
                 tags_error_msg = """Invalid data.
              You may enter up to 5 tags which are separated by ",".
-             Each tag must have between 2-20 characters."""
+             Each tag must have between 2-20 characters. And cannot contain special characters (like * # " etc.) """
                 messages.error(
                     request, {"title": "ERROR:", "message_content": tags_error_msg}
                 )
