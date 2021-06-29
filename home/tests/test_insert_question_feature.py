@@ -490,7 +490,7 @@ class TestInsertQuestionFeature:
             response = client.get(self.new_question_url)
 
             assert response.status_code == 302
-            assert response.url == "/login/?next=/explore/new_question"
+            assert response.url == "/users/login?next=/explore/new_question"
 
         def test_valid_tags_not_removed_from_question(self, client, authenticated_user):
             data = {
