@@ -68,7 +68,7 @@ def tags(request):
     return render(request, "home/tags.html", {"tags": tags})
 
 
-@login_required(login_url="/login/")
+@login_required(login_url="login")
 def new_question(request):
     form = QuestionForm
     if request.method == "POST":
