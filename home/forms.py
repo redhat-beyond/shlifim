@@ -19,6 +19,14 @@ class QuestionForm(forms.ModelForm):
             "content",
         )
 
+    def clean_sub_subject(self):
+        subject = self.cleaned_data.get("subject")
+        sub_subject = self.cleaned_data.get("sub_subject")
+        if sub_subject and sub_subject not in subject.sub_subject_set.all():
+            raise forms.ValidationError("The sub-subject doesn't match the subject")
+        else:
+            return sub_subject
+
 
 class CommentForm(forms.ModelForm):
     content = RichTextBleachField(default="")
