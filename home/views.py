@@ -7,6 +7,7 @@ from django.http import Http404, HttpResponse
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.urls import reverse_lazy
+import json
 
 
 def about(request):
@@ -95,12 +96,14 @@ def new_question(request):
                     request, {"title": "ERROR:", "message_content": tags_error_msg}
                 )
         else:
+            validation_error = json.loads(question_form.errors.as_json())
+            if question_form.has_error("sub_subject"):
+                message_content = validation_error["sub_subject"][0]["message"]
+            else:
+                message_content = "Invalid data. Book number must be between 1-999."
             messages.error(
                 request,
-                {
-                    "title": "ERROR:",
-                    "message_content": "Invalid data. Book number must be between 1-999.",
-                },
+                {"title": "ERROR:", "message_content": message_content},
             )
     return render(
         request,
