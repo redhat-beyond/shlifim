@@ -57,6 +57,17 @@ class TestSignUp:
                 },
                 "email",
             ],
+            # email already in use
+            [
+                {
+                    "username": "valid_username2",
+                    "email": "Ido@gmail.com",
+                    "gender": "U",
+                    "password1": "IdoIdo123",
+                    "password2": "IdoIdo123",
+                },
+                "email",
+            ],
             # password to short
             [
                 {
