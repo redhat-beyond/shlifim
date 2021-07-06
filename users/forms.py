@@ -25,3 +25,14 @@ class SignUpForm(UserCreationForm):
             "password1",
             "password2",
         )
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email")
+
+        registered_email_count = User.objects.filter(email=email).count()
+
+        if email and registered_email_count > 0:
+            raise forms.ValidationError(
+                "This email address is already in use. Please supply a different email address."
+            )
+        return email
