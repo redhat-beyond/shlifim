@@ -330,6 +330,16 @@ class TestInsertQuestionFeature:
                     }
                 ),
                 # User entered all the required fields and a valid book page
+                (
+                    {
+                        "title": "Question in Math",
+                        "subject": 1,
+                        "sub_subject": 1,
+                        "grade": Grade.GRADE7,
+                        "tags_": "",
+                    }
+                ),
+                # User entered all the required fields with sub-subject
             ],
         )
         def test_post_valid_question_with_client(
@@ -365,6 +375,16 @@ class TestInsertQuestionFeature:
                     }
                 ),
                 # User entered all the required fields except grade
+                (
+                    {
+                        "title": "Question in Math",
+                        "content": "How much is it 1+1?",
+                        "tags_": "",
+                        "subject": 1,
+                        "sub_subject": 10
+                    }
+                )
+                # User entered all subsubject not matching the subject
             ],
         )
         def test_post_invalid_question_with_default_error_message(
@@ -465,6 +485,19 @@ class TestInsertQuestionFeature:
              Each tag must have between 2-20 characters. And cannot contain special characters (like * # " etc.) """,
                 ),
                 # User entered all the required fields and invalid tags (more than 5 tags)
+                (
+                    (
+                        {
+                            "title": "Question in Math",
+                            "subject": 1,
+                            "sub_subject": 10,
+                            "content": "How much is it 1+1?",
+                            "grade": Grade.GRADE7,
+                        }
+                    ),
+                    """The sub-subject doesn't match the subject""",
+                )
+                # User entered subsubject not matching the subject
             ],
         )
         def test_post_invalid_question_with_custom_err_msg(
