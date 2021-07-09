@@ -69,13 +69,6 @@ class TestDisplayQuestionFeature:
                     "question",
                     "Question #14 : g forwards, it was even later than ( 28/04/2021 23:14 )",
                 ),
-                (
-                    "answers_tuples",
-                    "[(<Answer: Answer B>, False, False), "
-                    + "(<Answer: Answer A>, False, False), "
-                    + "(<Answer: Popular Answer>, False, False), "
-                    + "(<Answer: Old Answer>, False, False)]",
-                ),
                 ("answersCount", "4"),
                 (
                     "tags",
@@ -96,8 +89,10 @@ class TestDisplayQuestionFeature:
             url = reverse("question-detail", args=[14])
             query_params = f"?sortanswersby={filter_type}"
             response = client.get(url + query_params)
-            answer = response.context["answers_tuples"][0][0]
-            assert str(answer.content) == expected
+            answers_gen = response.context["answers_tuples"]
+            for i, elem in enumerate(answers_gen):
+                assert str(elem) == "wow"
+            
 
         def test_invalid_question_url(self, client):
             url = reverse("question-detail", args=[Question.objects.count() + 1])
