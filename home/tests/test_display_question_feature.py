@@ -1,5 +1,5 @@
 import pytest
-from home.models import Question
+from home.models import Question, Answer
 from django.urls import reverse
 from django.db.models.query import QuerySet
 
@@ -69,13 +69,6 @@ class TestDisplayQuestionFeature:
                     "question",
                     "Question #14 : g forwards, it was even later than ( 28/04/2021 23:14 )",
                 ),
-                (
-                    "answers_tuples",
-                    "[(<Answer: Answer B>, False, False), "
-                    + "(<Answer: Answer A>, False, False), "
-                    + "(<Answer: Popular Answer>, False, False), "
-                    + "(<Answer: Old Answer>, False, False)]",
-                ),
                 ("answersCount", "4"),
                 (
                     "tags",
@@ -89,15 +82,17 @@ class TestDisplayQuestionFeature:
                 assert str(response.context[check]) == expected
 
         @pytest.mark.parametrize(
-            ("filter_type, expected"),
-            [("date", "Answer B"), ("votes", "Popular Answer")],
+            ("filter_type, expected_answer_list"),
+            [
+                ("date", ["Answer B", "Answer A", "Popular Answer", "Old Answer"]),
+                ("votes", ["Popular Answer", "Answer B", "Old Answer", "Answer A"]),
+            ],
         )
-        def test_sorting_answers(self, client, filter_type, expected):
-            url = reverse("question-detail", args=[14])
-            param_dict = {"sortanswersby": filter_type}
-            response = client.get(url, param_dict)
-            answer = response.context["answers_tuples"][0][0]
-            assert str(answer.content) == expected
+        def test_sorting_answers(self, client, filter_type, expected_answer_list):
+            question = Question.objects.get(id=TEST_QUESTION_ID)
+            answers_generator = Answer.get_answers_tuples(question, filter_type, client)
+            for idx, (answer, liked, disliked) in enumerate(answers_generator):
+                assert answer.content == expected_answer_list[idx]
 
         def test_invalid_question_url(self, client):
             url = reverse("question-detail", args=[Question.objects.count() + 1])
