@@ -31,7 +31,8 @@ class TestTagsPage:
         ],
     )
     def test_tags_page_with_search(self, client, search, included):
-        response = client.get("/tags/?q=" + search)
+        param_dict = {"q": search}
+        response = client.get("/tags/", param_dict)
         assert response.status_code == 200
         assert included in str(response.context["tags"])
 
