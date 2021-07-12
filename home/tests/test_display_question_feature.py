@@ -94,8 +94,8 @@ class TestDisplayQuestionFeature:
         )
         def test_sorting_answers(self, client, filter_type, expected):
             url = reverse("question-detail", args=[14])
-            query_params = f"?sortanswersby={filter_type}"
-            response = client.get(url + query_params)
+            param_dict = {"sortanswersby": filter_type}
+            response = client.get(url, param_dict)
             answer = response.context["answers_tuples"][0][0]
             assert str(answer.content) == expected
 
@@ -106,8 +106,8 @@ class TestDisplayQuestionFeature:
 
         def test_invalid_answersort_url(self, client):
             url = reverse("question-detail", args=[1])
-            query_params = "?sortanswersby=BAD"
-            response = client.get(url + query_params)
+            param_dict = {"sortanswersby": "BAD"}
+            response = client.get(url, param_dict)
             assert response.status_code == 404
 
     class TestThumbsRouting:

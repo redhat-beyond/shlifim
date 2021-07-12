@@ -381,7 +381,7 @@ class TestInsertQuestionFeature:
                         "content": "How much is it 1+1?",
                         "tags_": "",
                         "subject": 1,
-                        "sub_subject": 10
+                        "sub_subject": 10,
                     }
                 )
                 # User entered all subsubject not matching the subject

@@ -54,8 +54,9 @@ class TestExplorePage:
         def test_questions_filter_by_tag(
             self, client, tag_name, wanted_questions_ids_lst
         ):
-            url = f"/explore/?tag={tag_name}"
-            response = client.get(url)
+            url = reverse("explore-page")
+            param_dict = {"tag": tag_name}
+            response = client.get(url, param_dict)
 
             requested_questions_ids = response.context["questions"].values_list(
                 "id", flat=True
@@ -73,8 +74,8 @@ class TestExplorePage:
         def test_context_with_tags(self, client, tag_name):
 
             url = self.explore_page_url
-            query_params = f"?tag={tag_name}"
-            response = client.get(url + query_params)
+            param_dict = {"tag": tag_name}
+            response = client.get(url, param_dict)
             requested_tag = response.context["tag"]
             assert requested_tag == tag_name
 
@@ -91,8 +92,8 @@ class TestExplorePage:
         )
         def test_invalid_tag(self, client, invalid_tag_name):
             url = self.explore_page_url
-            query_params = f"?tag={invalid_tag_name}"
-            response = client.get(url + query_params)
+            param_dict = {"tag": invalid_tag_name}
+            response = client.get(url, param_dict)
             assert response.status_code == 404
 
         @pytest.mark.parametrize("tag_name", ["#Pitagoras", "#Bagrut_Exam"])
