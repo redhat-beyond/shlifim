@@ -1,25 +1,33 @@
 from django.urls import path
-from . import views
-from .views import QuestionsListView
+from .views import (
+    about,
+    landingpage,
+    tags,
+    new_question,
+    thumbs,
+    display_question_page,
+    DeleteQuestionView,
+    QuestionsListView,
+)
 
 urlpatterns = [
-    path("about/", views.about, name="about"),
-    path("", views.landingpage, name="landing-page"),
-    path("tags/", views.tags, name="tags"),
+    path("about/", about, name="about"),
+    path("", landingpage, name="landing-page"),
+    path("tags/", tags, name="tags"),
     path("explore/", QuestionsListView.as_view(), name="explore-page"),
-    path("explore/new_question", views.new_question, name="new-question"),
+    path("explore/new_question", new_question, name="new-question"),
     path(
         "explore/question_<int:question_pk>/thumb/<string>/<int:answer_pk>",
-        views.thumbs,
+        thumbs,
     ),
     path(
         "explore/question_<int:pk>/",
-        views.display_question_page,
+        display_question_page,
         name="question-detail",
     ),
     path(
         "explore/question_<int:pk>/delete",
-        views.DeleteQuestionView.as_view(),
+        DeleteQuestionView.as_view(),
         name="question-delete",
     ),
 ]
