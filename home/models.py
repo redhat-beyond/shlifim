@@ -162,16 +162,13 @@ class Answer(models.Model):
     @classmethod
     def get_answers_tuples(cls, question, sort_answer_by, profile):
         answers = question.get_answers_feed(sort_answer_by)
-        answers_tuples = []
         for answer in answers:
-            answers_tuples.append(
-                (
+            answers_tuples = (
                     answer,
                     answer.profile_liked(profile),
                     answer.profile_disliked(profile),
-                )
             )
-        return answers_tuples
+            yield answers_tuples
 
     @property
     def show_content(self):
