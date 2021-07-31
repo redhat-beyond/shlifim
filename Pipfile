@@ -8,6 +8,7 @@ flake8 = "*"
 pytest = "*"
 pytest-django = "*"
 black = "*"
+coverage = "*"
 
 [packages]
 django = "*"
