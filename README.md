@@ -80,7 +80,7 @@ NOTE: Be sure to merge the latest from "upstream" before making a pull request!
 
 from - 
 
-![redhat_logo](https://user-images.githubusercontent.com/40122521/110502952-5a505b00-8104-11eb-9bf9-bb49643b1388.PNG)
+![image](https://user-images.githubusercontent.com/40122521/128231894-9f3337ce-4056-4518-a84b-29c4dada45be.png)
 
 
 
