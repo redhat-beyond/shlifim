@@ -10,6 +10,7 @@ to their homework and assignments and also share summaries.
 
 [![GitHub pull-requests](https://img.shields.io/github/issues-pr/beyond-io/shlifim.svg)](https://github.com/beyond-io/shlifim/pulls)
 [![GitHub issues](https://img.shields.io/github/issues/beyond-io/shlifim.svg)](https://GitHub.com/beyond-io/shlifim/issues/)
+![](https://img.shields.io/badge/coverage-99%25-brightgreen)
 
 ## Existing Features:
 * Register 
